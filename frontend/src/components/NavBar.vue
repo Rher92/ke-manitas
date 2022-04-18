@@ -1,13 +1,11 @@
 <template>
-  <header>
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-    <!-- <img src="../assets/logo-32x32.png"> -->
-      <div class="container">
-        <a class="navbar-brand" href="/">Inicio</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarCollapse">
+<div class="bg-dark">
+<div class="container-md">
+    <b-navbar toggleable="lg" type="dark" variant="info" class="bg-dark">
+      <b-navbar-brand href="/">Inicio</b-navbar-brand>
+      <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+      <b-collapse id="nav-collapse" is-nav>
+        <b-navbar-nav>
           <ul v-if="isLoggedIn" class="navbar-nav me-auto mb-2 mb-md-0">
             <li class="nav-item">
               <router-link class="nav-link" to="/profile">Mi Perfil</router-link>
@@ -21,10 +19,11 @@
               <router-link class="nav-link" to="/login">Iniciar sesión</router-link>
             </li>
           </ul>
-        </div>
-      </div>
-    </nav>
-  </header>
+        </b-navbar-nav>
+      </b-collapse>
+    </b-navbar>
+  </div>
+  </div>
 </template>
 
 <script>

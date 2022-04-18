@@ -18,7 +18,7 @@ class Mailing:
         
         email = EmailMessage(
             'Hello!!!!',
-            'https://retornos-consumibles-file.fra1.digitaloceanspaces.com/retornos-consumibles-file/test.pdf',
+            'https://x.fra1.digitaloceanspaces.com/x/test.pdf',
             'from@example.com',
             ['to1@example.com', 'to2@example.com'],
             ['bcc@example.com'],

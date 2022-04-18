@@ -4,7 +4,7 @@ import Vuex from 'vuex';
 
 import notes from './modules/notes';
 import users from './modules/users';
-import clients from './modules/clients';
+// import clients from './modules/clients';
 
 
 
@@ -14,7 +14,7 @@ export default new Vuex.Store({
   modules: {
     notes,
     users,
-    clients,
+    // clients,
   },
   plugins: [createPersistedState()]
 });

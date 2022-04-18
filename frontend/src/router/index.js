@@ -10,7 +10,6 @@ import Login from '@/views/Login';
 import Note from '@/views/Note';
 import Profile from '@/views/Profile';
 import Register from '@/views/Register';
-import Client from  '@/views/Client';
 
 Vue.use(VueRouter);
 

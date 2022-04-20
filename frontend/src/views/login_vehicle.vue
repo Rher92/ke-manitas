@@ -7,7 +7,10 @@
           v-model="form.km"
           placeholder="ingrese kilometraje"
           required
+          v-bind:class="{'form-control':true, 'is-invalid' : !validInputTexts(form.km)  && fieldsBlured}"
+          v-on:blur="fieldsBlured = true"
         ></b-form-input>
+        <div class="invalid-feedback">CIFRC es requerido</div>
       </b-form-group>
 
       <b-form-group id="input-group-3" label="Vehiculos:" label-for="input-3">
@@ -49,10 +52,10 @@
     name: 'LoginVehicle',
     data() {
       return {
+        fieldsBlured : false,
+        valid : false,
+        submitted : false,
         form: {
-          fieldsBlured : false,
-          valid : false,
-          submitted : false,
           km: '',
           vehicle: null,
           file: null,
@@ -62,9 +65,27 @@
       }
     },
     methods: {
+      validate : function(){
+        this.emailBlured = true;
+        if(this.km != ''){
+            this.valid = true;
+        }
+      },
+      validInputTexts : function(field) {
+        if (field !== '' && field !== null && field !== undefined){
+          let _return = false;
+          if (field.length > 0){
+            _return = true
+          }
+          return _return;
+          }
+      },
       onSubmit(event) {
-        event.preventDefault()
-        alert(JSON.stringify(this.form))
+        this.validate();
+        if(this.valid){
+          event.preventDefault()
+          alert(JSON.stringify(this.form))
+        }
       },
       onReset(event) {
         event.preventDefault()

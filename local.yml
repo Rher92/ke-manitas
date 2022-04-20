@@ -10,7 +10,6 @@ services:
       context: .
       dockerfile: ./compose/local/django/Dockerfile
     image: backend_local_django
-    container_name: backend_local_django
     depends_on:
       - postgres
     volumes:
@@ -27,7 +26,6 @@ services:
       context: .
       dockerfile: ./compose/production/postgres/Dockerfile
     image: backend_production_postgres
-    container_name: backend_local_postgres
     volumes:
       - backend_local_postgres_data:/var/lib/postgresql/data:Z
       - backend_local_postgres_data_backups:/backups:z
@@ -36,7 +34,6 @@ services:
 
   docs:
     image: backend_local_docs
-    container_name: backend_local_docs
     build:
       context: .
       dockerfile: ./compose/local/docs/Dockerfile

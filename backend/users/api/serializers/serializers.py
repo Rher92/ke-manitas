@@ -45,6 +45,8 @@ class UserLoginSerializer(serializers.Serializer):
 class UserModelSerializer(serializers.ModelSerializer):
     """User model serializer."""
     role = serializers.StringRelatedField(read_only=True)
+    groups = serializers.SerializerMethodField()
+    
 
     class Meta:
         """Meta serializer."""
@@ -58,6 +60,13 @@ class UserModelSerializer(serializers.ModelSerializer):
             'is_staff',
             'first_name',
             'last_name',
-            'role'
+            'role',
+            'groups'
         )
         read_only_fields = ['role', 'is_staff']
+
+    def get_groups(self, obj):
+        _return = None
+        if hasattr(obj, 'groups'):
+            _return = [group.name for group in obj.groups.all()]
+        return _return

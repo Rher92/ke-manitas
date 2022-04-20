@@ -9,7 +9,7 @@
         <label for="password" class="form-label">Password:</label>
         <input type="password" name="password" v-model="form.password" class="form-control" />
       </div>
-      <button type="submit" class="btn btn-primary">Submit</button>
+      <b-button block type="submit" class="btn btn-primary" variant="primary">Ingresar</b-button>
     </form>
   </section>
 </template>

@@ -10,6 +10,7 @@ import Login from '@/views/Login';
 import Note from '@/views/Note';
 import Profile from '@/views/Profile';
 import Register from '@/views/Register';
+import LoginVehicle from '@/views/login_vehicle';
 
 Vue.use(VueRouter);
 
@@ -28,6 +29,11 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: Login,
+  },
+  {
+    path: '/login-vehicle',
+    name: 'LoginVehicle',
+    component: LoginVehicle,
   },
   {
     path: '/dashboard',

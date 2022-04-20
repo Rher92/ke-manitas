@@ -33,5 +33,12 @@ export default {
       }
     }
   },
+
+  created() {
+    if (this.user.user.groups.includes('driver')){
+      this.$router.push('/login-vehicle');
+    }
+  }
+
 }
 </script>

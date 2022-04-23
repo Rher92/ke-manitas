@@ -27,3 +27,4 @@ celery
 flower
 redis
 boto3
+django-simple-history

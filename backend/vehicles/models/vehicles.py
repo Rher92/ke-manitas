@@ -40,7 +40,7 @@ class Brand(BaseCreatedUpdatedModel):
         return super().save(*args, **kwargs)
 
     def __str__(self):
-        return f'marca del vehiculo: {self.name}'
+        return f'marca: {self.name}'
 
 
 class Vehicle(BaseCreatedUpdatedModel):
@@ -64,7 +64,11 @@ class Vehicle(BaseCreatedUpdatedModel):
     )
 
     def __str__(self):
-        return f'vehiculo: {self.pk} -{self.brand} - {self.model} - {self.plate}'
+        return f'vehiculo: {self.pk} - {self.brand} - {self.model} - {self.plate}'
+    
+    @property
+    def slug_name(self):
+        return f'{self.brand} - {self.model} - {self.plate}'
     
     @property
     def _history_user(self):

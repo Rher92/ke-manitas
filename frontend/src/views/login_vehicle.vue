@@ -1,6 +1,7 @@
 <template>
   <div>
-    <b-form @submit="onSubmit" @reset="onReset" v-if="show">
+    <!-- <b-form @submit.prevent="onSubmit" @reset="onReset" v-if="show"> -->
+    <b-form @submit.prevent="onSubmit"  v-if="show">
       <b-form-group id="input-group-2" label="Kilometraje:" label-for="input-2">
         <b-form-input
           type="number"
@@ -28,15 +29,13 @@
       </b-form-group>
 
       <b-form-group id="input-group-3" label="Foto Kilometraje:" label-for="input-3">
-        <b-form-file
-          v-model="form.file"
-          placeholder="Eliga un archivo o arrastrelo aqui..."
-          drop-placeholder="arroje el archivo..."
-          required
-          v-bind:class="{'form-control':true, 'is-invalid' : !validInputTexts(form.file)  && fieldsBlured}"
-          v-on:blur="fieldsBlured = true"
-        ></b-form-file>
-         <div class="invalid-feedback">Seleccione una foto</div>
+        <div class="container">
+          <div class="large-12 medium-12 small-12 cell">
+            <label>File
+              <input type="file" id="file" ref="file" v-on:change="handleFileUpload()"/>
+            </label>
+          </div>
+        </div>
       </b-form-group>
 
       <div>
@@ -47,17 +46,15 @@
       </div>
 
     </b-form>
-    <!-- <b-card class="mt-3" header="Form Data Result">
-      <pre class="m-0">{{ form }}</pre>
-    </b-card> -->
   </div>
+
 </template>
 
 <script>
 import axios from 'axios';
+import { mapActions } from 'vuex';
 
   export default {
-    // endpoint: process.env.VUE_APP_BASE_URL,
     endpoint: process.env.BASE_URL,
     name: 'LoginVehicle',
     data() {
@@ -67,8 +64,7 @@ import axios from 'axios';
         submitted : false,
         form: {
           km: '',
-          vehicle: '',
-          file: null,
+          vehicle: ''
         },
         vehicles: {
           items: [],
@@ -77,10 +73,16 @@ import axios from 'axios';
         states: {
           km: false,
           vehicle: false
-        }
+        },
+        files: null,
       }
     },
     methods: {
+      handleFileUpload(){
+        console.log(this.$refs.file.files[0])
+        this.files = this.$refs.file.files[0];
+      },
+      ...mapActions(['logInVehicle']),
       validate : function(){
         this.emailBlured = true;
         if(this.km != '' && this.vehicle != ''){
@@ -88,9 +90,7 @@ import axios from 'axios';
         }
       },
       validInputTexts : function(field) {
-        console.log(field)
         if (field !== '' && field !== null && field !== undefined){
-          console.log(field)
           let _return = false;
           if ((field.length > 0) || (field > 0) || (field.size > 0)){
             _return = true
@@ -98,12 +98,34 @@ import axios from 'axios';
           return _return;
           }
       },
-      onSubmit(event) {
+      onSubmit() {
         this.validate();
         if(this.valid){
           event.preventDefault()
-          alert(JSON.stringify(this.form))
+          this.logInVehicles()
         }
+      },
+
+      logInVehicles: function(){
+        const FormData = require('form-data');
+        const form = new FormData();
+
+        form.append('km', this.form.km);
+        form.append('vehicle',  this.form.vehicle);
+        form.append('file', this.files);
+
+        axios.post('api/vehicles-workday/', form,{
+              headers: {
+                  "Content-Type": "multipart/form-data",
+                  // 'Access-Control-Allow-Origin': '*'
+              }
+            })
+          .then(function (response) {
+            console.log(response);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
       },
 
       getVehicles: function(){
@@ -118,28 +140,12 @@ import axios from 'axios';
               var dict = { text: element.slug_name, value: element.id, disabled: !element.available }
               this.vehicles.items.push(dict)
             })
-          console.log(this.vehicles.items)
           })
           .catch(error => console.error('timeout exceeded', console.log(error)))
       },
-
-      onReset(event) {
-        event.preventDefault()
-        // Reset our form values
-        this.form.km = ''
-        this.form.vehicle = null
-        // Trick to reset/clear native browser form validation state
-        this.show = false
-        this.$nextTick(() => {
-          this.show = true
-        })
-      }
     },
     mounted() {
-      console.log('here')
       this.getVehicles()
     },
   }
-
-  
 </script>

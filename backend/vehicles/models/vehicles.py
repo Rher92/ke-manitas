@@ -68,7 +68,7 @@ class Vehicle(BaseCreatedUpdatedModel):
     
     @property
     def slug_name(self):
-        return f'{self.brand} - {self.model} - {self.plate}'
+        return f'{self.brand} - modelo: {self.model} - matricula: {self.plate}'
     
     @property
     def _history_user(self):

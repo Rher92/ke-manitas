@@ -7,8 +7,10 @@ from django_filters.rest_framework import DjangoFilterBackend
 # Permissions
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
+# Models
 from vehicles.models.vehicles import Vehicle
 
+# Serializers
 from vehicles.api.serializers.vehicles import VehicleSerializer
 
 

@@ -31,9 +31,7 @@
       <b-form-group id="input-group-3" label="Foto Kilometraje:" label-for="input-3">
         <div class="container">
           <div class="large-12 medium-12 small-12 cell">
-            <label>File
               <input type="file" id="file" ref="file" v-on:change="handleFileUpload()"/>
-            </label>
           </div>
         </div>
       </b-form-group>
@@ -52,7 +50,7 @@
 
 <script>
 import axios from 'axios';
-import { mapActions } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
   export default {
     endpoint: process.env.BASE_URL,
@@ -117,6 +115,7 @@ import { mapActions } from 'vuex';
         axios.post('api/vehicles-workday/', form,{
               headers: {
                   "Content-Type": "multipart/form-data",
+                  "Authorization": `Token ${this.user.access_token}`
                   // 'Access-Control-Allow-Origin': '*'
               }
             })
@@ -147,5 +146,8 @@ import { mapActions } from 'vuex';
     mounted() {
       this.getVehicles()
     },
+  computed: {
+    ...mapGetters({user: 'stateUser'}),
+  },
   }
 </script>

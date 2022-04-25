@@ -15,8 +15,12 @@ class VehicleWorkDay(BaseCreatedUpdatedModel):
         related_query_name='workday',
         on_delete=models.DO_NOTHING,
     )
-    km_init = models.IntegerField()
-    km_finish = models.IntegerField()
+    km_init = models.IntegerField(
+        null=True,
+        blank=True)
+    km_finish = models.IntegerField(
+        null=True,
+        blank=True)
 
 
 class ExpensesVehicleWorkday(BaseCreatedUpdatedModel):
@@ -55,12 +59,14 @@ class VehicleWorkDayFiles(BaseCreatedUpdatedModel):
         related_name='workday_file',
         related_query_name='workday_file',
         on_delete=models.DO_NOTHING,
-    )
+        null=True,
+        blank=True)
     vehicle_workday_expenses = models.ForeignKey('ExpensesVehicleWorkday',
         related_name='workday_file',
         related_query_name='workday_file',
         on_delete=models.DO_NOTHING,
-    )
+        null=True,
+        blank=True)
     file = models.FileField(upload_to='workday/vehicle', blank=True, null=True)
     type = models.CharField(
         max_length=8,

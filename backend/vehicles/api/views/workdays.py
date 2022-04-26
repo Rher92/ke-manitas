@@ -16,7 +16,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from backend.vehicles.models.workdays import VehicleWorkDay
 
 # Serializers
-from backend.vehicles.api.serializers.workdays import VehicleWorkDaySerializer
+from backend.vehicles.api.serializers.workdays import VehicleWorkDaySerializer, VehicleWorkDayListSerializer
 
 class VehicleWorkDayViewSet(mixins.RetrieveModelMixin,
                             mixins.ListModelMixin,
@@ -45,8 +45,12 @@ class VehicleWorkDayViewSet(mixins.RetrieveModelMixin,
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        return Response(status=status.HTTP_201_CREATED)
+        _serializer = self.perform_create(serializer)
+        return Response(
+            {'vehicle_workday': _serializer},
+            status=status.HTTP_201_CREATED
+        )
 
     def perform_create(self, serializer):
-        serializer.save(worker=self.request.user)
+        vehicle_workday = serializer.save(worker=self.request.user)
+        return VehicleWorkDayListSerializer(vehicle_workday).data

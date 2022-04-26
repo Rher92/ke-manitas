@@ -76,11 +76,10 @@ import { mapGetters, mapActions } from 'vuex';
       }
     },
     methods: {
+      ...mapActions(['VehicleWorkdayToUser']),
       handleFileUpload(){
-        console.log(this.$refs.file.files[0])
         this.files = this.$refs.file.files[0];
       },
-      ...mapActions(['logInVehicle']),
       validate : function(){
         this.emailBlured = true;
         if(this.km != '' && this.vehicle != ''){
@@ -104,7 +103,7 @@ import { mapGetters, mapActions } from 'vuex';
         }
       },
 
-      logInVehicles: function(){
+      async logInVehicles(){
         const FormData = require('form-data');
         const form = new FormData();
 
@@ -112,15 +111,15 @@ import { mapGetters, mapActions } from 'vuex';
         form.append('vehicle',  this.form.vehicle);
         form.append('file', this.files);
 
-        axios.post('api/vehicles-workday/', form,{
+        axios.post('api/vehicles-workday/', form, {
               headers: {
                   "Content-Type": "multipart/form-data",
                   "Authorization": `Token ${this.user.access_token}`
                   // 'Access-Control-Allow-Origin': '*'
               }
             })
-          .then(function (response) {
-            console.log(response);
+          .then(response => {
+            this.VehicleWorkdayToUser(response.data)
           })
           .catch(function (error) {
             console.log(error);

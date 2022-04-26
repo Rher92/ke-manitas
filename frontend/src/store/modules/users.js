@@ -23,22 +23,20 @@ const actions = {
   async logIn({commit}, user) {
     let userLogin = await axios.post('api/users/login/', user, headers);
     await commit('setUserToken', userLogin.data);
-    // await dispatch('viewMe', userLogin);
   },
 
-  // async viewMe({commit}, userLogin) {
-  //   // await commit('setUser', userLogin.data.user);
-  // },
-
-  // eslint-disable-next-line no-empty-pattern
-  async deleteUser({}, id) {
+  async deleteUser(_, id) {
     await axios.delete(`user/${id}`);
   },
 
   async logOut({commit}) {
     let user = null;
     commit('logout', user);
-  }
+  },
+
+  async VehicleWorkdayToUser({commit}, vehicle_workday) {
+    await commit('setVehicleWorkdayToUser', vehicle_workday);
+  },
 };
 
 const mutations = {
@@ -48,6 +46,9 @@ const mutations = {
   logout(state, user){
     state.user = user;
   },
+  setVehicleWorkdayToUser(state, vehicle_workday){
+    state.user.vehicle_workday = vehicle_workday.vehicle_workday;
+},
 };
 
 export default {

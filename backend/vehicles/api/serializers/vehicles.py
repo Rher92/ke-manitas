@@ -1,4 +1,4 @@
-from vehicles.models.vehicles import Vehicle
+from backend.vehicles.models.vehicles import Vehicle
 
 from rest_framework import serializers
 

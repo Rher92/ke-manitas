@@ -13,10 +13,10 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
 # Models
-from vehicles.models.workdays import VehicleWorkDay
+from backend.vehicles.models.workdays import VehicleWorkDay
 
 # Serializers
-from vehicles.api.serializers.workdays import VehicleWorkDaySerializer
+from backend.vehicles.api.serializers.workdays import VehicleWorkDaySerializer
 
 class VehicleWorkDayViewSet(mixins.RetrieveModelMixin,
                             mixins.ListModelMixin,

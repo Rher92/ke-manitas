@@ -1,5 +1,5 @@
-from vehicles.models.workdays import VehicleWorkDay, VehicleWorkDayFiles
-from vehicles.models.vehicles import Vehicle
+from backend.vehicles.models.workdays import VehicleWorkDay, VehicleWorkDayFiles
+from backend.vehicles.models.vehicles import Vehicle
 
 from rest_framework import serializers
 

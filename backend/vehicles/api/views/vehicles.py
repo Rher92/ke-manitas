@@ -8,10 +8,10 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
 # Models
-from vehicles.models.vehicles import Vehicle
+from backend.vehicles.models.vehicles import Vehicle
 
 # Serializers
-from vehicles.api.serializers.vehicles import VehicleSerializer
+from backend.vehicles.api.serializers.vehicles import VehicleSerializer
 
 
 class VehicleViewSet(mixins.RetrieveModelMixin,

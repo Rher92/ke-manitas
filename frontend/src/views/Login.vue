@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 export default {
   name: 'Login',
   data() {
@@ -26,6 +26,9 @@ export default {
       }
     };
   },
+  computed: {
+    ...mapGetters({user: 'stateUser'}),
+  },
   methods: {
     ...mapActions(['logIn']),
     async submit() {
@@ -33,7 +36,13 @@ export default {
       User.append('username', this.form.username);
       User.append('password', this.form.password);
       await this.logIn(User);
-      this.$router.push('/profile').catch((e) => console.log(e));
+
+      console.log()
+      if (this.user.vehicle_workday == null && this.user.user.groups.includes('driver')){
+        this.$router.push('/login-vehicle');
+      } else {
+        this.$router.push('/profile').catch((e) => console.log(e));
+      }
     }
   }
 }

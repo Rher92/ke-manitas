@@ -120,6 +120,7 @@ import { mapGetters, mapActions } from 'vuex';
             })
           .then(response => {
             this.VehicleWorkdayToUser(response.data)
+            this.$router.push('/profile').catch((e) => console.log(e));
           })
           .catch(function (error) {
             console.log(error);
@@ -145,6 +146,7 @@ import { mapGetters, mapActions } from 'vuex';
     mounted() {
       this.getVehicles()
     },
+
   computed: {
     ...mapGetters({user: 'stateUser'}),
   },

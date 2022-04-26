@@ -44,7 +44,7 @@ class UserViewSet(RetrieveModelMixin, ListModelMixin, UpdateModelMixin, GenericV
         data = {
             'user': UserModelSerializer(user).data,
             'access_token': token,
-            'vehicle_workday': {}
+            'vehicle_workday': None
         }
         vehicle = user.vehicleworkday_set.all().filter(close=False).last()
         if vehicle:

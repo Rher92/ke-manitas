@@ -48,7 +48,6 @@ class UserViewSet(RetrieveModelMixin, ListModelMixin, UpdateModelMixin, GenericV
         }
         vehicle = user.vehicleworkday_set.all().filter(close=False).last()
         if vehicle:
-            import pdb; pdb.set_trace()
             data['vehicle_workday'] = VehicleWorkDayListSerializer(vehicle).data
         return Response(data, status=status.HTTP_201_CREATED)
     

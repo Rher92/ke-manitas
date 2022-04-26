@@ -21,6 +21,7 @@ class VehicleWorkDay(BaseCreatedUpdatedModel):
     km_finish = models.IntegerField(
         null=True,
         blank=True)
+    close = models.BooleanField(default=False)
 
 
 class ExpensesVehicleWorkday(BaseCreatedUpdatedModel):

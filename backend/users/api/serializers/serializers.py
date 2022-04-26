@@ -47,7 +47,6 @@ class UserModelSerializer(serializers.ModelSerializer):
     role = serializers.StringRelatedField(read_only=True)
     groups = serializers.SerializerMethodField()
     
-
     class Meta:
         """Meta serializer."""
 
@@ -61,10 +60,10 @@ class UserModelSerializer(serializers.ModelSerializer):
             'first_name',
             'last_name',
             'role',
-            'groups'
+            'groups',
         )
         read_only_fields = ['role', 'is_staff']
-
+        
     def get_groups(self, obj):
         _return = None
         if hasattr(obj, 'groups'):

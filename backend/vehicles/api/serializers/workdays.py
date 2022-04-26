@@ -1,6 +1,8 @@
 from backend.vehicles.models.workdays import VehicleWorkDay, VehicleWorkDayFiles
 from backend.vehicles.models.vehicles import Vehicle
 
+from backend.vehicles.api.serializers.vehicles import VehicleSerializer
+
 from rest_framework import serializers
 
 
@@ -43,4 +45,16 @@ class VehicleWorkDaySerializer(serializers.Serializer):
         file.save()
         
         return vehicle_workday
-        
+
+
+class VehicleWorkDayListSerializer(serializers.ModelSerializer):
+    vehicle = VehicleSerializer(read_only=True)
+    class Meta:
+        model = VehicleWorkDay
+        fields = [
+            "id", 
+            "km_init",
+            "km_finish",
+            "close",
+            "vehicle"
+        ]

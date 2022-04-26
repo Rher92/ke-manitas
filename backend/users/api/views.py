@@ -8,6 +8,7 @@ from rest_framework.authtoken.models import Token
 
 
 from .serializers.serializers import UserSerializer, UserLoginSerializer, UserModelSerializer
+from backend.vehicles.api.serializers.workdays import VehicleWorkDayListSerializer
 
 User = get_user_model()
 
@@ -42,8 +43,13 @@ class UserViewSet(RetrieveModelMixin, ListModelMixin, UpdateModelMixin, GenericV
         user, token = serializer.save()
         data = {
             'user': UserModelSerializer(user).data,
-            'access_token': token
+            'access_token': token,
+            'vehicle_workday': {}
         }
+        vehicle = user.vehicleworkday_set.all().filter(close=False).last()
+        if vehicle:
+            import pdb; pdb.set_trace()
+            data['vehicle_workday'] = VehicleWorkDayListSerializer(vehicle).data
         return Response(data, status=status.HTTP_201_CREATED)
     
     @action(detail=False, methods=['get'])

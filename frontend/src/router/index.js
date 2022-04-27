@@ -8,7 +8,7 @@ import Home from '@/views/Home.vue';
 import Login from '@/views/Login';
 import Profile from '@/views/Profile';
 import Register from '@/views/Register';
-import LoginVehicle from '@/views/login_vehicle';
+import LoginVehicle from '@/views/LoginVehicle';
 
 Vue.use(VueRouter);
 

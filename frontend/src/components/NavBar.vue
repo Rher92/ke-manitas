@@ -13,6 +13,13 @@
             <li class="nav-item">
               <a class="nav-link" @click="logout">Cerrar sesión</a>
             </li>
+            <li class="nav-item">
+              <b-nav-item-dropdown text="Vehiculo" right type="dark">
+                <!-- <b-dropdown-item href="#">Perfil</b-dropdown-item> -->
+                <b-dropdown-item href="/logout-vehicle">Cerrar Sesion</b-dropdown-item>
+                <b-dropdown-item href="/login-vehicle">Iniciar Sesion</b-dropdown-item>
+              </b-nav-item-dropdown>
+            </li> 
           </ul>
           <ul v-else class="navbar-nav me-auto mb-2 mb-md-0">
             <li class="nav-item">

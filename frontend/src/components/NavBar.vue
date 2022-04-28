@@ -16,8 +16,12 @@
             <li class="nav-item">
               <b-nav-item-dropdown text="Vehiculo" right type="dark">
                 <!-- <b-dropdown-item href="#">Perfil</b-dropdown-item> -->
-                <b-dropdown-item href="/logout-vehicle">Cerrar Sesion</b-dropdown-item>
-                <b-dropdown-item href="/login-vehicle">Iniciar Sesion</b-dropdown-item>
+                <div v-if="VehicleLogin == null">
+                  <b-dropdown-item href="/login-vehicle">Iniciar Sesion</b-dropdown-item>
+                </div>
+                <div v-else>
+                  <b-dropdown-item href="/logout-vehicle">Cerrar Sesion</b-dropdown-item>
+                </div>
               </b-nav-item-dropdown>
             </li> 
           </ul>
@@ -39,6 +43,9 @@ export default {
   computed: {
     isLoggedIn: function() {
       return this.$store.getters.isAuthenticated;
+    },
+    VehicleLogin: function() {
+      return this.$store.getters.stateUser.vehicle_workday;
     }
   },
   methods: {

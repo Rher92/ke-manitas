@@ -36,8 +36,6 @@ export default {
       User.append('username', this.form.username);
       User.append('password', this.form.password);
       await this.logIn(User);
-
-      console.log()
       if (this.user.vehicle_workday == null && this.user.user.groups.includes('driver')){
         this.$router.push('/login-vehicle');
       } else {

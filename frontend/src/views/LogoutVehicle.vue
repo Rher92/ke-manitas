@@ -88,18 +88,19 @@ import { mapGetters, mapActions } from 'vuex';
         this.validate();
         if(this.valid){
           event.preventDefault()
-          this.logInVehicles()
+          this.logOutVehicles()
         }
       },
 
-      async logInVehicles(){
+      async logOutVehicles(){
         const FormData = require('form-data');
         const form = new FormData();
 
         form.append('km', this.form.km);
+        form.append('vehicle', this.user.vehicle_workday.vehicle.id);
         form.append('file', this.files);
 
-        axios.put('api/vehicles-workday/', form, {
+        axios.put(`api/vehicles-workday/${this.user.vehicle_workday.vehicle.plate}/`, form, {
               headers: {
                   "Content-Type": "multipart/form-data",
                   "Authorization": `Token ${this.user.access_token}`

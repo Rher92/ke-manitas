@@ -37,15 +37,29 @@ class VehicleWorkDaySerializer(serializers.Serializer):
         )
         vehicle_workday.save()
         
-        file = VehicleWorkDayFiles(
+        VehicleWorkDayFiles(
             file=file,
             vehicle_workday=vehicle_workday,
             type=VehicleWorkDayFiles.TypeFile.INIT
-        )
-        file.save()
+        ).save()
         
         return vehicle_workday
-
+    
+    def update(self, instance, validated_data, *args, **kwargs):
+        instance.km_finish = validated_data.pop('km')
+        file = validated_data.pop('file')
+        instance.worker = validated_data.pop('worker')
+        instance.close = True
+        instance.save(update_fields=['km_finish',
+                                     'worker',
+                                     'close'])
+        VehicleWorkDayFiles(
+            file=file,
+            vehicle_workday=instance,
+            type=VehicleWorkDayFiles.TypeFile.FINISH
+        ).save()
+        
+        return instance
 
 class VehicleWorkDayListSerializer(serializers.ModelSerializer):
     vehicle = VehicleSerializer(read_only=True)

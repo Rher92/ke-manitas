@@ -5,8 +5,10 @@
     <div>
       <p><strong>Usuario:</strong> <span>{{ user.user.username }}</span></p>
       <p><strong>Email:</strong> <span>{{ user.user.email }}</span></p>
-      <!-- <p><button @click="deleteAccount()" class="btn btn-primary">Delete Account</button></p> -->
-      <!-- <p><button @click="deleteAccount()" class="btn btn-primary">Delete Account</button></p> -->
+
+      <div v-if="user.vehicle_workday != null">
+        <p><strong>Vehiculo Asignado:</strong> <span>{{ user.vehicle_workday.vehicle.slug_name }}</span></p>
+      </div>
     </div>
   </section>
 </template>
@@ -15,9 +17,6 @@
 import { mapGetters, mapActions } from 'vuex';
 export default {
   name: 'Profile',
-  // created: function() {
-  //   return this.$store.mapGetters('viewMe');
-  // },
   computed: {
     ...mapGetters({user: 'stateUser' }),
   },

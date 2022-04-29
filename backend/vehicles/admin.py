@@ -1,5 +1,7 @@
 from django.contrib import admin
+import nested_admin
 
+from django.utils.safestring import mark_safe
 from simple_history import register
 from simple_history.admin import SimpleHistoryAdmin
 
@@ -35,11 +37,40 @@ class BrandAdmin(admin.ModelAdmin):
 
 
 @admin.register(VehicleWorkDayFiles)
-class VehicleWorkDayFilesAdmin(admin.ModelAdmin):
+class VehicleWorkDayFilesAdmin(nested_admin.NestedModelAdmin):
     pass
 
 
-#  Tracker
-admin.site.register(Vehicle, SimpleHistoryAdmin)
-admin.site.register(ExpensesVehicleWorkday, SimpleHistoryAdmin)
-admin.site.register(VehicleWorkDay, SimpleHistoryAdmin)
+@admin.register(Vehicle)
+class VehicleAdmin(nested_admin.NestedModelAdmin):
+    list_display = ['model', 'plate', 'km', 'available', 'type']
+    list_filter = ['plate', 'km', 'available', 'type']
+    search_fields = ['plate']
+
+
+@admin.register(VehicleWorkDay)
+class VehicleWorkDayAdmin(nested_admin.NestedModelAdmin):
+    list_display = ['vehicle', 'worker', 'close']
+    list_filter = ['vehicle', 'worker', 'close']
+    search_fields = ['vehicle', 'worker']
+    readonly_fields = ['init_work_day_file', 'finish_work_day_file']
+
+    def init_work_day_file(self, obj):
+        for i in obj.workday_file.all():
+            if i.type == 'INIT' and i.vehicle_workday:
+                image = i.file
+                return mark_safe('<img src="{url}"/>'.format(
+                    url = image.url)
+                )
+
+    def finish_work_day_file(self, obj):
+        for i in obj.workday_file.all():
+            if i.type == 'FINISH' and i.vehicle_workday:
+                image = i.file
+                return mark_safe('<img src="{url}"/>'.format(
+                    url = image.url)
+                )
+
+@admin.register(ExpensesVehicleWorkday)
+class ExpensesVehicleWorkdayAdmin(nested_admin.NestedModelAdmin):
+    pass

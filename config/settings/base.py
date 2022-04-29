@@ -76,6 +76,7 @@ THIRD_PARTY_APPS = [
     "corsheaders",
     "django_filters",
     "simple_history",
+    "nested_admin",
 ]
 
 LOCAL_APPS = [

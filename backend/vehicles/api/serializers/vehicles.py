@@ -18,11 +18,19 @@ class VehicleLoginSerializer(serializers.ModelSerializer):
 
 
 class VehicleSerializer(VehicleLoginSerializer):
+    is_being_used_by = serializers.SerializerMethodField()
     class Meta:
         model = VehicleLoginSerializer.Meta.model
         fields =  VehicleLoginSerializer.Meta.fields + [
             'plate',
             'brand',
             'color',
-            'km'
+            'km',
+            'is_being_used_by'
         ]
+
+    def get_is_being_used_by(self, obj):
+        _return = None
+        if not obj.vehicleworkday_set.last().close:
+            _return = obj.vehicleworkday_set.last().worker.name
+        return _return

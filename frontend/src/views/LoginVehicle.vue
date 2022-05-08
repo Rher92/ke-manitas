@@ -136,7 +136,14 @@ import { mapGetters, mapActions } from 'vuex';
           .then(response => {
             let vehicles = response.data.results
             vehicles.forEach(element => {
-              var dict = { text: element.slug_name, value: element.id, disabled: !element.available }
+              var dict = { text: element.slug_name, value: element.id, disabled: false }
+              if (element.is_being_used_by != null){
+                dict['text'] = element.slug_name + ' - usado por: ' + element.is_being_used_by
+                dict['disabled'] = true
+              } else if (!element.available) {
+                dict['text'] = element.slug_name + ' - no disponible'
+                dict['disabled'] = true
+              }
               this.vehicles.items.push(dict)
             })
           })

@@ -14,6 +14,7 @@
         ></b-form-input>
         <div class="invalid-feedback">Matricula es requerida</div>
       </b-form-group>
+        <p v-if="form.km > 0 ">Kilometraje formateado: {{this.km_formatted}}</p>
 
       <b-form-group id="input-group-3" label="Vehiculos:" label-for="input-3">
         <b-form-select
@@ -49,6 +50,7 @@
 </template>
 
 <script>
+
 import axios from 'axios';
 import { mapGetters, mapActions } from 'vuex';
 
@@ -149,6 +151,7 @@ import { mapGetters, mapActions } from 'vuex';
           })
           .catch(error => console.error('timeout exceeded', console.log(error)))
       },
+
     },
     mounted() {
       this.getVehicles()
@@ -156,6 +159,10 @@ import { mapGetters, mapActions } from 'vuex';
 
   computed: {
     ...mapGetters({user: 'stateUser'}),
+    km_formatted() {
+      return Number(this.form.km).toLocaleString()
+    }
   },
   }
+
 </script>

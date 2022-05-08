@@ -59,17 +59,37 @@ class VehicleWorkDayAdmin(nested_admin.NestedModelAdmin):
         for i in obj.workday_file.all():
             if i.type == 'INIT' and i.vehicle_workday:
                 image = i.file
-                return mark_safe('<img src="{url}"/>'.format(
-                    url = image.url)
-                )
+                url = image.url
+                return mark_safe(f"""
+                <img src="{url}" width="150" height="150"/>
+                <br>
+                <br>
+                <br>
+                <div class="text-center">
+                <ul class="object-tools">
+                    <li>
+                    <a href="{url}" class="historylink" target="_blank">Ver completo</a>
+                    </li>
+                </ul>
+                </div>""")
 
     def finish_work_day_file(self, obj):
         for i in obj.workday_file.all():
             if i.type == 'FINISH' and i.vehicle_workday:
                 image = i.file
-                return mark_safe('<img src="{url}"/>'.format(
-                    url = image.url)
-                )
+                url = image.url
+                return mark_safe(f"""
+                <img src="{url}" width="150" height="150"/>
+                <br>
+                <br>
+                <br>
+                <div class="text-center">
+                <ul class="object-tools">
+                    <li>
+                    <a href="{url}" class="historylink" target="_blank">Ver completo</a>
+                    </li>
+                </ul>
+                </div>""")
 
 @admin.register(ExpensesVehicleWorkday)
 class ExpensesVehicleWorkdayAdmin(nested_admin.NestedModelAdmin):

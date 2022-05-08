@@ -4,6 +4,9 @@ from django.utils.translation import gettext_lazy as _
 from backend.utils.models import BaseCreatedUpdatedModel
 from simple_history.models import HistoricalRecords
 
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
 
 class VehicleWorkDay(BaseCreatedUpdatedModel):
     history = HistoricalRecords()
@@ -22,6 +25,14 @@ class VehicleWorkDay(BaseCreatedUpdatedModel):
         null=True,
         blank=True)
     close = models.BooleanField(default=False)
+
+
+@receiver(post_save, sender=VehicleWorkDay)
+def save_profile(sender, instance, **kwargs):
+    if instance.km_finish and instance.close:
+        vehicle = instance.vehicle
+        vehicle.km = instance.km_finish
+        vehicle.save()
 
 
 class ExpensesVehicleWorkday(BaseCreatedUpdatedModel):

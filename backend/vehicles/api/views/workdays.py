@@ -3,6 +3,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.settings import api_settings
 from rest_framework.parsers import MultiPartParser, FormParser, FileUploadParser, JSONParser
+from rest_framework.decorators import action
+
 
 
 # Filters
@@ -18,7 +20,8 @@ from backend.vehicles.models.workdays import VehicleWorkDay
 # Serializers
 from backend.vehicles.api.serializers.workdays import VehicleWorkDaySerializer, VehicleWorkDayListSerializer
 
-class VehicleWorkDayViewSet(mixins.UpdateModelMixin,
+class VehicleWorkDayViewSet(mixins.ListModelMixin,
+                            mixins.UpdateModelMixin,
                             mixins.CreateModelMixin,
                             viewsets.GenericViewSet):
 
@@ -27,7 +30,7 @@ class VehicleWorkDayViewSet(mixins.UpdateModelMixin,
     queryset = VehicleWorkDay.objects.all()
     lookup_field = "vehicle__plate"
     filter_backends = (SearchFilter, OrderingFilter, DjangoFilterBackend)
-    search_fields = ('vehicle__name', 'vehicle__plate')
+    search_fields = ('worker__username', "id")
 
     def get_permissions(self):
         """Assign permissions for each action"""
@@ -38,8 +41,9 @@ class VehicleWorkDayViewSet(mixins.UpdateModelMixin,
         """Return serializer based on action."""
         action_mappings = {
             'create': VehicleWorkDaySerializer,
+            'update': VehicleWorkDaySerializer,
         }
-        return action_mappings.get(self.action, VehicleWorkDaySerializer)
+        return action_mappings.get(self.action, VehicleWorkDayListSerializer)
     
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -76,3 +80,14 @@ class VehicleWorkDayViewSet(mixins.UpdateModelMixin,
 
     def perform_update(self, serializer):
         serializer.save(worker=self.request.user)
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)

@@ -63,6 +63,7 @@ class VehicleWorkDaySerializer(serializers.Serializer):
 
 class VehicleWorkDayListSerializer(serializers.ModelSerializer):
     vehicle = VehicleSerializer(read_only=True)
+    worker = serializers.SerializerMethodField()
     class Meta:
         model = VehicleWorkDay
         fields = [
@@ -70,5 +71,13 @@ class VehicleWorkDayListSerializer(serializers.ModelSerializer):
             "km_init",
             "km_finish",
             "close",
-            "vehicle"
+            "worker",
+            "vehicle",
         ]
+
+    def get_worker(self, obj):
+        _return = None
+        if hasattr(obj, 'worker'):
+            _return = obj.worker.username
+        return _return
+

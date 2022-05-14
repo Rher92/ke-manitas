@@ -10,6 +10,8 @@ import Profile from '@/views/Profile';
 import Register from '@/views/Register';
 import LoginVehicle from '@/views/LoginVehicle';
 import LogoutVehicle from '@/views/LogoutVehicle';
+import ListVehicleWorkdays from '@/views/ListVehicleWorkdays';
+import RetrieveVehicleWorkdays from '@/views/RetrieveVehicleWorkdays';
 
 Vue.use(VueRouter);
 
@@ -38,6 +40,17 @@ const routes = [
     path: '/logout-vehicle',
     name: 'LogoutVehicle',
     component: LogoutVehicle,
+  },
+  {
+    path: '/list-vehicle-workdays',
+    name: 'ListVehicleWorkdays',
+    component: ListVehicleWorkdays,
+  },
+  {
+    path: '/retrieve-vehicle-workdays/:id',
+    name: 'RetrieveVehicleWorkdays',
+    component: RetrieveVehicleWorkdays,
+    props: true
   },
   {
     path: '/dashboard',

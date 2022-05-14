@@ -64,10 +64,12 @@ class VehicleWorkDaySerializer(serializers.Serializer):
 class VehicleWorkDayListSerializer(serializers.ModelSerializer):
     vehicle = VehicleSerializer(read_only=True)
     worker = serializers.SerializerMethodField()
+    date = serializers.SerializerMethodField()
     class Meta:
         model = VehicleWorkDay
         fields = [
             "id", 
+            "date",
             "km_init",
             "km_finish",
             "close",
@@ -81,3 +83,8 @@ class VehicleWorkDayListSerializer(serializers.ModelSerializer):
             _return = obj.worker.username
         return _return
 
+    def get_date(self,obj):
+        _return = None
+        if hasattr(obj, 'created'):
+            _return = f"{obj.created.day}/{obj.created.month}/{obj.created.year}"
+        return _return

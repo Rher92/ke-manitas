@@ -2,7 +2,9 @@ from django.contrib.auth.models import AbstractUser
 from django.db.models import CharField
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
+from django.db import models
 
+from backend.utils.models import BaseCreatedUpdatedModel
 
 class User(AbstractUser):
     """
@@ -24,3 +26,31 @@ class User(AbstractUser):
 
         """
         return reverse("users:detail", kwargs={"username": self.username})
+
+
+class Cliente(BaseCreatedUpdatedModel):
+    user = models.OneToOneField(
+            User,
+            on_delete=models.CASCADE,
+        )
+    ciudad = models.CharField(blank=True, null=True, max_length=255)
+    barrio = models.CharField(blank=True, null=True, max_length=255)
+    casa = models.CharField(blank=True, null=True, max_length=255)
+    nombre = models.CharField(blank=True, null=True, max_length=255)
+    tipo_de_documento = models.CharField(blank=True, null=True, max_length=255)
+    documento = models.CharField(blank=True, null=True, max_length=255)
+    barrio = models.CharField(blank=True, null=True, max_length=255)
+    telefono = models.IntegerField(blank=True, null=True, max_length=30)
+    email = models.EmailField(blank=True, null=True, max_length=100)
+
+
+class Prestamos(BaseCreatedUpdatedModel):
+    user = models.OneToOneField(
+            User,
+            on_delete=models.CASCADE,
+        )
+    cantidad = models.IntegerField(blank=True, null=True, max_length=30)
+    moneda = models.CharField(blank=True, null=True, max_length=20)
+    pagado = models.BooleanField(blank=True, null=True, default=False)
+    fecha_del_pago = models.DateTimeField(blank=True, null=True)
+    

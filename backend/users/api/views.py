@@ -1,14 +1,24 @@
 from django.contrib.auth import get_user_model
-from rest_framework import status
+from rest_framework import mixins, viewsets, status
 from rest_framework.decorators import action
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin, UpdateModelMixin
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.authtoken.models import Token
 
+# Filters
+from rest_framework.filters import SearchFilter, OrderingFilter
+from django_filters.rest_framework import DjangoFilterBackend
+
+# Permissions
+from rest_framework.permissions import IsAuthenticated, AllowAny
 
 from .serializers.serializers import UserSerializer, UserLoginSerializer, UserModelSerializer
 from backend.vehicles.api.serializers.workdays import VehicleWorkDayListSerializer
+
+from backend.users.models import Prestamos
+from backend.users.api.paginations import PrestamosPagination
+from backend.users.api.serializers.serializers import PrestamosSerializer
 
 User = get_user_model()
 
@@ -60,3 +70,29 @@ class UserViewSet(RetrieveModelMixin, ListModelMixin, UpdateModelMixin, GenericV
             'response': 'User logout success.',
         }
         return Response(data, status=status.HTTP_200_OK)
+    
+
+
+class LentsViewSet(mixins.ListModelMixin,
+                            mixins.RetrieveModelMixin,
+                            viewsets.GenericViewSet):
+    
+    permission_classes = [AllowAny]
+    queryset = Prestamos.objects.all()
+    lookup_field = "pk"
+    pagination_class = PrestamosPagination
+    filter_backends = (SearchFilter, OrderingFilter, DjangoFilterBackend)
+    search_fields = ('user__username', "id")
+
+    def get_permissions(self):
+        """Assign permissions for each action"""
+        permissions = [IsAuthenticated]
+        return [permision() for permision in permissions]
+
+    def get_serializer_class(self):
+        """Return serializer based on action."""
+        action_mappings = {
+            'list': PrestamosSerializer,
+            'retrieve': PrestamosSerializer,
+        }
+        return action_mappings.get(self.action, VehicleWorkDayListSerializer)

@@ -14,6 +14,9 @@
               <a class="nav-link" @click="logout">Cerrar sesión</a>
             </li>
             <li class="nav-item">
+              <router-link class="nav-link" to="/list-lents-users">Mis prestamos</router-link>
+            </li>
+            <li class="nav-item">
               <b-nav-item-dropdown text="Vehiculo" right type="dark">
                 <!-- <b-dropdown-item href="#">Perfil</b-dropdown-item> -->
                 <div v-if="VehicleLogin == null">

@@ -4,8 +4,50 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth import (
     authenticate,
 )
+from backend.users.models import Prestamos
 
 User = get_user_model()
+
+
+class PrestamosSerializer(serializers.ModelSerializer):
+    fecha = serializers.SerializerMethodField()
+    worker = serializers.SerializerMethodField()
+    fecha_del_pago = serializers.SerializerMethodField()
+    pagado = serializers.SerializerMethodField()
+    class Meta:
+        model = Prestamos
+        fields = [
+            "id",
+            "worker",
+            "cantidad",
+            "pagado",
+            "fecha",
+            "fecha_del_pago",
+            "moneda"]
+
+    def get_fecha_del_pago(self, obj):
+        _return = 'sin pagar'
+        if obj.fecha_del_pago:
+            _return = f"{obj.created.day}/{obj.created.month}/{obj.created.year}"
+        return _return
+    
+    def get_worker(self, obj):
+        _return = None
+        if hasattr(obj, 'user'):
+            _return = obj.user.username
+        return _return
+    
+    def get_pagado(self, obj):
+        _return = 'No'
+        if obj.pagado:
+            _return = 'Si'
+        return _return
+
+    def get_fecha(self,obj):
+        _return = None
+        if hasattr(obj, 'created'):
+            _return = f"{obj.created.day}/{obj.created.month}/{obj.created.year}"
+        return _return
 
 
 class UserSerializer(serializers.ModelSerializer):

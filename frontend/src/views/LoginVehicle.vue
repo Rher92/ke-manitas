@@ -12,7 +12,7 @@
           v-bind:class="{'form-control':true, 'is-invalid' : !validInputTexts(form.km)  && fieldsBlured}"
           v-on:blur="fieldsBlured = true"
         ></b-form-input>
-        <div class="invalid-feedback">Matricula es requerida</div>
+        <div class="invalid-feedback">KM es requerido o No coincide con el KM del sistema</div>
       </b-form-group>
         <p v-if="form.km > 0 ">Kilometraje formateado: {{this.km_formatted}}</p>
 
@@ -32,7 +32,7 @@
       <b-form-group id="input-group-3" label="Foto Kilometraje:" label-for="input-3">
         <div class="container">
           <div class="large-12 medium-12 small-12 cell">
-              <input type="file" id="file" ref="file" v-on:change="handleFileUpload()"/>
+              <input required type="file" id="file" ref="file" v-on:change="handleFileUpload()"/>
           </div>
         </div>
       </b-form-group>
@@ -84,8 +84,22 @@ import { mapGetters, mapActions } from 'vuex';
       },
       validate : function(){
         this.emailBlured = true;
-        if(this.km != '' && this.vehicle != ''){
-            this.valid = true;
+        let vehicle_selected = null
+        if(this.form.km != '' && this.form.vehicle != ''){
+
+          this.vehicles.items.forEach(element => {
+            if(element.value == this.form.vehicle){
+              vehicle_selected = element
+            }
+          })
+
+          console.log((vehicle_selected.km + vehicle_selected.tolerancia), this.form.km, ((vehicle_selected.km + vehicle_selected.tolerancia_km) < parseInt(this.form.km) > vehicle_selected.km))
+            if ((vehicle_selected.km + vehicle_selected.tolerancia) < parseInt(this.form.km) > vehicle_selected.km){
+              // this.valid = true;
+               console.log('NO EEROR PIBE')
+            } else {
+              console.log('EEROR PIBE')
+            }
         }
       },
       validInputTexts : function(field) {
@@ -138,7 +152,7 @@ import { mapGetters, mapActions } from 'vuex';
           .then(response => {
             let vehicles = response.data.results
             vehicles.forEach(element => {
-              var dict = { text: element.slug_name, value: element.id, disabled: false }
+              var dict = { text: element.slug_name, value: element.id, disabled: false, km: element.km, tolerancia: element.tolerancia_km }
               if (element.is_being_used_by != null){
                 dict['text'] = element.slug_name + ' - usado por: ' + element.is_being_used_by
                 dict['disabled'] = true

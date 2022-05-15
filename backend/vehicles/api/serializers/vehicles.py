@@ -26,7 +26,8 @@ class VehicleSerializer(VehicleLoginSerializer):
             'brand',
             'color',
             'km',
-            'is_being_used_by'
+            'is_being_used_by',
+            'tolerancia_km'
         ]
 
     def get_is_being_used_by(self, obj):

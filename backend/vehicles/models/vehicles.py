@@ -50,6 +50,7 @@ class Vehicle(BaseCreatedUpdatedModel):
     plate = models.CharField(max_length=36)
     available = models.BooleanField(default=True)
     km = models.IntegerField()
+    tolerancia_km = models.IntegerField(default=500)
     state = models.ForeignKey('State',
         related_query_name='vehicle',
         on_delete=models.DO_NOTHING,

@@ -23,7 +23,7 @@
                   <b-dropdown-item href="/logout-vehicle">Cerrar Sesion</b-dropdown-item>
                 </div>
                 <div>
-                  <b-dropdown-item href="/list-vehicle-workdays">Actividades</b-dropdown-item>
+                  <b-dropdown-item href="/list-vehicle-workdays">Mis actividades</b-dropdown-item>
                 </div>
 
               </b-nav-item-dropdown>

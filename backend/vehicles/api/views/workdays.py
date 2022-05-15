@@ -20,6 +20,8 @@ from backend.vehicles.models.workdays import VehicleWorkDay
 # Serializers
 from backend.vehicles.api.serializers.workdays import VehicleWorkDaySerializer, VehicleWorkDayListSerializer
 
+# Pagination
+from backend.vehicles.api.paginations.paginations import VehiclesPagination
 class VehicleWorkDayViewSet(mixins.ListModelMixin,
                             mixins.UpdateModelMixin,
                             mixins.CreateModelMixin,
@@ -29,6 +31,7 @@ class VehicleWorkDayViewSet(mixins.ListModelMixin,
     permission_classes = [AllowAny]
     queryset = VehicleWorkDay.objects.all()
     lookup_field = "vehicle__plate"
+    pagination_class = VehiclesPagination
     filter_backends = (SearchFilter, OrderingFilter, DjangoFilterBackend)
     search_fields = ('worker__username', "id")
 

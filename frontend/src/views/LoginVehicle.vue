@@ -2,19 +2,6 @@
   <div>
     <!-- <b-form @submit.prevent="onSubmit" @reset="onReset" v-if="show"> -->
     <b-form @submit.prevent="onSubmit"  v-if="show">
-      <b-form-group id="input-group-2" label="Kilometraje:" label-for="input-2">
-        <b-form-input
-          type="number"
-          id="input-2"
-          v-model="form.km"
-          placeholder="ingrese kilometraje"
-          required
-          v-bind:class="{'form-control':true, 'is-invalid' : !validInputTexts(form.km)  && fieldsBlured}"
-          v-on:blur="fieldsBlured = true"
-        ></b-form-input>
-        <div class="invalid-feedback">KM es requerido o No coincide con el KM del sistema</div>
-      </b-form-group>
-        <p v-if="form.km > 0 ">Kilometraje formateado: {{this.km_formatted}}</p>
 
       <b-form-group id="input-group-3" label="Vehiculos:" label-for="input-3">
         <b-form-select
@@ -23,16 +10,31 @@
           v-model="form.vehicle"
           :options="vehicles.items"
           required
-          v-bind:class="{'form-control':true, 'is-invalid' : !validInputTexts(form.vehicle)  && fieldsBlured}"
+          v-bind:class="{'form-control':true, 'is-invalid' : !validInputTexts(form.vehicle) && fieldsBlured}"
           v-on:blur="fieldsBlured = true"
         ></b-form-select>
         <div class="invalid-feedback">Seleccione un auto</div>
       </b-form-group>
 
+      <b-form-group id="input-group-2" label="Kilometraje:" label-for="input-2">
+        <b-form-input
+          type="number"
+          id="input-2"
+          v-model="form.km"
+          placeholder="ingrese kilometraje"
+          required
+          v-bind:class="{'form-control':true, 'is-invalid' : ((!validInputTexts(form.km)) || (!validInputKm(form.km))) && fieldsBlured}"
+          v-on:blur="fieldsBlured = true"
+          :disabled="this.vehicle_has_been_selected"
+        ></b-form-input>
+        <div class="invalid-feedback">KM es requerido o No coincide con el KM del sistema</div>
+      </b-form-group>
+        <p v-if="form.km > 0 ">Kilometraje formateado: {{this.km_formatted}}</p>
+
       <b-form-group id="input-group-3" label="Foto Kilometraje:" label-for="input-3">
         <div class="container">
           <div class="large-12 medium-12 small-12 cell">
-              <input required type="file" id="file" ref="file" v-on:change="handleFileUpload()"/>
+              <input required type="file" id="file" ref="file" v-on:change="handleFileUpload()" :disabled="this.vehicle_has_been_selected"/>
           </div>
         </div>
       </b-form-group>
@@ -60,6 +62,8 @@ import { mapGetters, mapActions } from 'vuex';
     data() {
       return {
         fieldsBlured : false,
+        validated: 0,
+        disabledForm: true,
         valid : false,
         submitted : false,
         form: {
@@ -83,25 +87,19 @@ import { mapGetters, mapActions } from 'vuex';
         this.files = this.$refs.file.files[0];
       },
       validate : function(){
-        this.emailBlured = true;
-        let vehicle_selected = null
-        if(this.form.km != '' && this.form.vehicle != ''){
-
-          this.vehicles.items.forEach(element => {
-            if(element.value == this.form.vehicle){
-              vehicle_selected = element
-            }
-          })
-
-          console.log((vehicle_selected.km + vehicle_selected.tolerancia), this.form.km, ((vehicle_selected.km + vehicle_selected.tolerancia_km) < parseInt(this.form.km) > vehicle_selected.km))
-            if ((vehicle_selected.km + vehicle_selected.tolerancia) < parseInt(this.form.km) > vehicle_selected.km){
-              // this.valid = true;
-               console.log('NO EEROR PIBE')
-            } else {
-              console.log('EEROR PIBE')
-            }
+        var vehicle_selected = null
+        let _return = false;
+        this.vehicles.items.forEach(element => {
+          if(element.value == this.form.vehicle){
+            vehicle_selected = element
+          }
+        })
+        if ((vehicle_selected.km_tolerance_up) > parseInt(this.form.km)  &&  parseInt(this.form.km) > (vehicle_selected.km_tolerance_down)){
+            _return = true;
         }
+        return _return
       },
+
       validInputTexts : function(field) {
         if (field !== '' && field !== null && field !== undefined){
           let _return = false;
@@ -111,8 +109,21 @@ import { mapGetters, mapActions } from 'vuex';
           return _return;
           }
       },
+      validInputKm : function(field) {
+        var vehicle_selected = null
+        this.vehicles.items.forEach(element => {
+          if(element.value == this.form.vehicle){
+            vehicle_selected = element
+          }
+        })
+        let _return = false;
+        if ((vehicle_selected.km_tolerance_up) > parseInt(field)  &&  parseInt(field)> (vehicle_selected.km_tolerance_down)){
+            _return = true;
+        }
+        return _return
+      },
       onSubmit() {
-        this.validate();
+        this.valid = this.validate();
         if(this.valid){
           event.preventDefault()
           this.logInVehicles()
@@ -152,7 +163,15 @@ import { mapGetters, mapActions } from 'vuex';
           .then(response => {
             let vehicles = response.data.results
             vehicles.forEach(element => {
-              var dict = { text: element.slug_name, value: element.id, disabled: false, km: element.km, tolerancia: element.tolerancia_km }
+              var dict = {
+                text: element.slug_name,
+                value: element.id,
+                disabled: false,
+                km: element.km,
+                tolerancia: element.tolerancia_km,
+                km_tolerance_up: element.km_tolerance_up,
+                km_tolerance_down: element.km_tolerance_down
+              }
               if (element.is_being_used_by != null){
                 dict['text'] = element.slug_name + ' - usado por: ' + element.is_being_used_by
                 dict['disabled'] = true
@@ -175,6 +194,13 @@ import { mapGetters, mapActions } from 'vuex';
     ...mapGetters({user: 'stateUser'}),
     km_formatted() {
       return Number(this.form.km).toLocaleString()
+    },
+    vehicle_has_been_selected(){
+      var _return = false
+      if (this.form.vehicle == ''){
+        _return = true
+      }
+      return _return
     }
   },
   }

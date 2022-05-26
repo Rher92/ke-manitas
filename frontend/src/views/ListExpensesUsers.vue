@@ -1,6 +1,6 @@
 <template>
   <section>
-    <h1>Vehiculos usados por día</h1>
+    <h1>Gastos</h1>
     <hr/><br/>
   <div class="overflow-auto">
     <b-table
@@ -16,14 +16,17 @@
       <template #head(date)>
        Fecha
       </template>
-      <template #head(km_init)>
-       Km inicio
+      <template #head(vehicle)>
+       Vehiculo
       </template>
-      <template #head(km_finish)>
-       Km final
+      <template #head(type)>
+       Tipo
       </template>
-      <template #head(vehicle.slug_name)>
-       Auto
+      <template #head(value)>
+       Valor
+      </template>
+      <template #head(description)>
+       Descripcion
       </template>
     </b-table>
     <b-pagination
@@ -44,7 +47,7 @@ import axios from 'axios';
 
 export default {
   props: ['id'],
-  name: 'ListVehicleWorkdays',
+  name: 'ListLentsUsers',
   endpoint: process.env.BASE_URL,
   data() {
     return {
@@ -56,7 +59,7 @@ export default {
         previous_page: '',
         perPage: 10,
         currentPage: 1,
-        fields:['date', 'km_init', 'km_finish', 'vehicle.slug_name'],
+        fields:['date', 'vehicle', 'type', 'value', 'description'],
         items: []
     }
   },
@@ -64,18 +67,18 @@ export default {
     ...mapGetters({user: 'stateUser' }),
   },
   methods: {
-    goToRetrieveVehicle: function(id){
-      this.$router.push({name:'RetrieveVehicleWorkdays', params: {id: id}});
+    goToRetrieveExpense: function(id){
+      this.$router.push({name:'RetrieveExpenseUser', params: {id: id}});
     },
     getItems: function(page=null){
-      var url = `/api/vehicles-workday/?search=${this.user.user.username}`
+      var url = `/api/expenses/?search=${this.user.user.username}`
       if(page){
-        url = `/api/vehicles-workday/?page=${page}&search=${this.user.user.username}`
+        url = `/api/expenses/?page=${page}&search=${this.user.user.username}`
       }
         axios({
           method: 'get',
           url: url,
-          timeout: 4000,    // 4 seconds timeout,
+          timeout: 4000,    // 4 seconds timeout
           headers: {
                   "Content-Type": "multipart/form-data",
                   "Authorization": `Token ${this.user.access_token}`
@@ -98,18 +101,11 @@ export default {
       this.getItems(page)
     },
     onRowSelected(items) {
-      this.goToRetrieveVehicle(items[0].id)
+      this.goToRetrieveExpense(items[0].id)
     },
   },
   mounted() {
     this.getItems()
   },
-
-  // created() {
-  //   if (this.user.user.groups.includes('driver')){
-  //     this.$router.push('/login-vehicle');
-  //   }
-  // }
-
 }
 </script>

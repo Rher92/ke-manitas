@@ -17,6 +17,9 @@
               <router-link class="nav-link" to="/list-lents-users">Mis prestamos</router-link>
             </li>
             <li class="nav-item">
+              <router-link class="nav-link" to="/list-expenses-users">Mis gastos</router-link>
+            </li>
+            <li class="nav-item">
               <b-nav-item-dropdown text="Vehiculo" right type="dark">
                 <!-- <b-dropdown-item href="#">Perfil</b-dropdown-item> -->
                 <div v-if="VehicleLogin == null">
@@ -28,7 +31,6 @@
                 <div>
                   <b-dropdown-item href="/list-vehicle-workdays">Mis actividades</b-dropdown-item>
                 </div>
-
               </b-nav-item-dropdown>
             </li> 
           </ul>

@@ -64,6 +64,11 @@ export default {
           method: 'get',
           url: url,
           timeout: 4000,    // 4 seconds timeout
+          headers: {
+                  "Content-Type": "multipart/form-data",
+                  "Authorization": `Token ${this.user.access_token}`
+                  // 'Access-Control-Allow-Origin': '*'
+              }
         })
         .then(response => {
           this.next_page = response.data.next,

@@ -13,7 +13,9 @@ import LogoutVehicle from '@/views/LogoutVehicle';
 import ListVehicleWorkdays from '@/views/ListVehicleWorkdays';
 import RetrieveVehicleWorkdays from '@/views/RetrieveVehicleWorkdays';
 import ListLentsUsers from '@/views/ListLentsUsers';
+import ListExpensesUsers from '@/views/ListExpensesUsers';
 import RetrieveLentUser from '@/views/RetrieveLentUser';
+import RetrieveExpenseUser from '@/views/RetrieveExpenseUser';
 
 Vue.use(VueRouter);
 
@@ -63,6 +65,17 @@ const routes = [
     path: '/retrieve-lent-users/:id',
     name: 'RetrieveLentUser',
     component: RetrieveLentUser,
+    props: true
+  },
+  {
+    path: '/list-expenses-users',
+    name: 'ListExpensesUsers',
+    component: ListExpensesUsers,
+  },
+  {
+    path: '/retrieve-expense-users/:id',
+    name: 'RetrieveExpenseUser',
+    component: RetrieveExpenseUser,
     props: true
   },
   {

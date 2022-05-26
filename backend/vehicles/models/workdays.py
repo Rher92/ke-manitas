@@ -37,10 +37,10 @@ def save_profile(sender, instance, **kwargs):
 
 class ExpensesVehicleWorkday(BaseCreatedUpdatedModel):
     class TypeExpenses(models.TextChoices):
-        FINE = 'FINE', _('fine/multa')
-        SERVICE = 'SERVICE', _('service/servicio/mantenimiento')
-        TICKET = 'TICKET', _('parking/estacionamiento')
-        OTHER = 'OTHER', _('other/otro')
+        FINE = 'MULTA', _('fine/multa')
+        SERVICE = 'SERVICIO', _('service/servicio/mantenimiento')
+        TICKET = 'ESTACIONAMIENTO', _('parking/estacionamiento')
+        OTHER = 'OTRO', _('other/otro')
 
     history = HistoricalRecords()
     description = models.TextField()
@@ -50,10 +50,13 @@ class ExpensesVehicleWorkday(BaseCreatedUpdatedModel):
         on_delete=models.DO_NOTHING,
     )
     type = models.CharField(
-        max_length=7,
+        max_length=30,
         choices=TypeExpenses.choices,
         default=TypeExpenses.OTHER,
     )
+    moneda = models.CharField(blank=True, null=True, max_length=20)
+    pagado = models.BooleanField(blank=True, null=True, default=False)
+    fecha_del_pago = models.DateTimeField(blank=True, null=True)
     
     def __str__(self) -> str:
         return f'{self.pk} - {self.vehicle_workday} - {self.type} - {self.value}'

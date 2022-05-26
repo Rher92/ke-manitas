@@ -94,6 +94,7 @@ class ExpensesVehicleWorkdaySerializer(serializers.ModelSerializer):
     vehicle = serializers.SerializerMethodField()
     worker = serializers.SerializerMethodField()
     date = serializers.SerializerMethodField()
+    fecha_del_pago = serializers.SerializerMethodField()
     class Meta:
         model = ExpensesVehicleWorkday
         fields = [
@@ -104,12 +105,21 @@ class ExpensesVehicleWorkdaySerializer(serializers.ModelSerializer):
             "type",
             "worker",
             "vehicle",
-            "date"
+            "date",
+            "moneda",
+            "pagado",
+            "fecha_del_pago"
         ]
 
     def get_vehicle(self, obj):
         _return = None
         if hasattr(obj, 'vehicle_workday'):
+            _return = obj.vehicle_workday.vehicle.slug_name
+        return _return
+
+    def get_type(self, obj):
+        _return = None
+        if hasattr(obj, 'type'):
             _return = obj.vehicle_workday.vehicle.slug_name
         return _return
 
@@ -123,4 +133,10 @@ class ExpensesVehicleWorkdaySerializer(serializers.ModelSerializer):
         _return = None
         if hasattr(obj, 'created'):
             _return = f"{obj.created.day}/{obj.created.month}/{obj.created.year}"
+        return _return
+
+    def get_fecha_del_pago(self,obj):
+        _return = None
+        if hasattr(obj, 'fecha_del_pago'):
+            _return = f"{obj.fecha_del_pago.day}/{obj.fecha_del_pago.month}/{obj.fecha_del_pago.year}"
         return _return

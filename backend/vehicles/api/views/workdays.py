@@ -15,13 +15,50 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
 # Models
-from backend.vehicles.models.workdays import VehicleWorkDay
+from backend.vehicles.models.workdays import VehicleWorkDay, ExpensesVehicleWorkday
 
 # Serializers
-from backend.vehicles.api.serializers.workdays import VehicleWorkDaySerializer, VehicleWorkDayListSerializer
+from backend.vehicles.api.serializers.workdays import VehicleWorkDaySerializer, VehicleWorkDayListSerializer, ExpensesVehicleWorkdaySerializer
 
 # Pagination
 from backend.vehicles.api.paginations.paginations import VehiclesPagination
+
+
+class ExpensesVehicleWorkdayViewSet(mixins.RetrieveModelMixin,
+                                    mixins.ListModelMixin,
+                                    viewsets.GenericViewSet):
+    parser_classes = (MultiPartParser,)
+    permission_classes = [AllowAny]
+    queryset = ExpensesVehicleWorkday.objects.all()
+    lookup_field = "id"
+    pagination_class = VehiclesPagination
+    filter_backends = (SearchFilter, OrderingFilter, DjangoFilterBackend)
+    search_fields = ('vehicle_workday__worker__username', "id")
+
+    def get_permissions(self):
+        """Assign permissions for each action"""
+        permissions = [IsAuthenticated]
+        return [permision() for permision in permissions]
+
+    def get_serializer_class(self):
+        """Return serializer based on action."""
+        action_mappings = {
+            'list': ExpensesVehicleWorkdaySerializer,
+            'retrieve': ExpensesVehicleWorkdaySerializer,
+        }
+        return action_mappings.get(self.action, ExpensesVehicleWorkdaySerializer)
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
 class VehicleWorkDayViewSet(mixins.ListModelMixin,
                             mixins.UpdateModelMixin,
                             mixins.CreateModelMixin,

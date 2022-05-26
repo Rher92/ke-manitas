@@ -1,4 +1,4 @@
-from backend.vehicles.models.workdays import VehicleWorkDay, VehicleWorkDayFiles
+from backend.vehicles.models.workdays import VehicleWorkDay, VehicleWorkDayFiles, ExpensesVehicleWorkday
 from backend.vehicles.models.vehicles import Vehicle
 
 from backend.vehicles.api.serializers.vehicles import VehicleSerializer
@@ -81,6 +81,42 @@ class VehicleWorkDayListSerializer(serializers.ModelSerializer):
         _return = None
         if hasattr(obj, 'worker'):
             _return = obj.worker.username
+        return _return
+
+    def get_date(self,obj):
+        _return = None
+        if hasattr(obj, 'created'):
+            _return = f"{obj.created.day}/{obj.created.month}/{obj.created.year}"
+        return _return
+
+
+class ExpensesVehicleWorkdaySerializer(serializers.ModelSerializer):
+    vehicle = serializers.SerializerMethodField()
+    worker = serializers.SerializerMethodField()
+    date = serializers.SerializerMethodField()
+    class Meta:
+        model = ExpensesVehicleWorkday
+        fields = [
+            "id",
+            "description",
+            "value",
+            "vehicle_workday",
+            "type",
+            "worker",
+            "vehicle",
+            "date"
+        ]
+
+    def get_vehicle(self, obj):
+        _return = None
+        if hasattr(obj, 'vehicle_workday'):
+            _return = obj.vehicle_workday.vehicle.slug_name
+        return _return
+
+    def get_worker(self, obj):
+        _return = None
+        if hasattr(obj, 'vehicle_workday'):
+            _return = obj.vehicle_workday.worker.username
         return _return
 
     def get_date(self,obj):

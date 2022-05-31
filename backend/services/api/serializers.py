@@ -1,3 +1,4 @@
+from dataclasses import fields
 from rest_framework import serializers
 
 from backend.services.models import Articulos, TiposGestion, Material, Expediente, ExpedientesImagenes
@@ -11,7 +12,7 @@ class ExpedienteSerializer(serializers.Serializer):
     articulos = serializers.CharField(required=False)  # Articulos
     file = serializers.FileField()
 
-    def validate_tipo_gestion(self, data):
+    def validate_gestion(self, data):
         try:
             tipo_gestion = TiposGestion.objects.get(pk=data)
         except TiposGestion.DoesNotExist:
@@ -25,7 +26,7 @@ class ExpedienteSerializer(serializers.Serializer):
             raise serializers.ValidationError(f'Material with pk: {data} does not exists.')
         return material
 
-    def validate_articulo(self, data):
+    def validate_articulos(self, data):
         articulo = Articulos.objects.filter(pk=data)
         if not articulo:
             raise serializers.ValidationError(f'Articulos with pk: {data} does not exists.')
@@ -34,10 +35,15 @@ class ExpedienteSerializer(serializers.Serializer):
 
     def create(self, validated_data, *args, **kwargs):
         file = validated_data.pop('file')
+        articulos = validated_data.pop('articulos', None)
+
         expediente = Expediente(
             **validated_data,
         )
         expediente.save()
+
+        if articulos:
+            expediente.articulos.add(*articulos)
 
         ExpedientesImagenes(
             file=file,
@@ -48,4 +54,61 @@ class ExpedienteSerializer(serializers.Serializer):
 
 
 class ExpedienteListSerializer(serializers.ModelSerializer):
-    pass
+    trabajador = serializers.SerializerMethodField()
+    cliente = serializers.SerializerMethodField()
+    gestion = serializers.SerializerMethodField()
+    material = serializers.SerializerMethodField()
+    articulos = serializers.SerializerMethodField()
+    created = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Expediente
+        fields = [
+            'id',
+            'identificador',
+            'trabajador',
+            'cliente',
+            'gestion',
+            'material',
+            'articulos',
+            'precio',
+            'created'
+        ]
+
+    def get_trabajador(self, obj):
+        _return = None
+        if hasattr(obj, 'trabajador'):
+            _return = obj.trabajador.username
+        return _return
+
+    def get_cliente(self, obj):
+        _return = None
+        if hasattr(obj, 'cliente'):
+            if obj.cliente:
+                _return = obj.cliente.username
+        return _return
+
+    def get_gestion(self, obj):
+        _return = None
+        if hasattr(obj, 'gestion'):
+            _return = obj.gestion.name
+        return _return
+
+    def get_material(self, obj):
+        _return = None
+        if hasattr(obj, 'material'):
+            if obj.material:
+                _return = obj.material.name
+        return _return
+
+    def get_articulos(self, obj):
+        _return = None
+        if hasattr(obj, 'articulos'):
+            _return = obj.articulos.all().values('id', 'name', 'precio_base')
+        return _return
+
+    def get_created(self,obj):
+        _return = None
+        if hasattr(obj, 'created'):
+            _return = f"{obj.created.day}/{obj.created.month}/{obj.created.year}"
+        return _return

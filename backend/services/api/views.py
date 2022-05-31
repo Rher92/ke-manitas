@@ -38,6 +38,7 @@ class ReadFieldsViewset(viewsets.ViewSet):
 
 
 class ExpedienteViewset(mixins.ListModelMixin,
+                        mixins.RetrieveModelMixin,
                         mixins.CreateModelMixin,
                         viewsets.GenericViewSet):
     parser_classes = (MultiPartParser,)

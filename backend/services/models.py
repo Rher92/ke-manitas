@@ -65,3 +65,4 @@ class ExpedientesImagenes(BaseCreatedUpdatedModel):
         on_delete=models.DO_NOTHING,
         null=True,
         blank=True)
+    file = models.FileField(upload_to='servicios/expedientes', blank=True, null=True)

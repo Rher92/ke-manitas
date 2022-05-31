@@ -4,7 +4,7 @@ from rest_framework.routers import DefaultRouter, SimpleRouter
 from backend.users.api.views import UserViewSet, LentsViewSet
 from backend.vehicles.api.views.vehicles import VehicleViewSet
 from backend.vehicles.api.views.workdays import VehicleWorkDayViewSet, ExpensesVehicleWorkdayViewSet
-
+from backend.services.api.views import ReadFieldsViewset
 
 if settings.DEBUG:
     router = DefaultRouter()
@@ -16,6 +16,8 @@ router.register("vehicles", VehicleViewSet)
 router.register("vehicles-workday", VehicleWorkDayViewSet)
 router.register("lents", LentsViewSet)
 router.register("expenses", ExpensesVehicleWorkdayViewSet)
+router.register(r"data-for-services", ReadFieldsViewset, basename='services.models.Expediente')
+
 
 app_name = "api"
 urlpatterns = router.urls

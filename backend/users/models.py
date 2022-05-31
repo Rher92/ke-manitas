@@ -29,7 +29,7 @@ class User(AbstractUser):
 
 
 class Cliente(BaseCreatedUpdatedModel):
-    user = models.OneToOneField(
+    user = models.ForeignKey(
             User,
             on_delete=models.CASCADE,
         )
@@ -45,7 +45,7 @@ class Cliente(BaseCreatedUpdatedModel):
 
 
 class Prestamos(BaseCreatedUpdatedModel):
-    user = models.OneToOneField(
+    user = models.ForeignKey(
             User,
             on_delete=models.CASCADE,
         )

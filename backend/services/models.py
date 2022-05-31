@@ -1,12 +1,16 @@
 from django.db import models
+from django.contrib.auth import get_user_model
 from slugify import slugify
 
 from backend.utils.models import BaseCreatedUpdatedModel
+
+User = get_user_model()
 
 
 class Articulos(BaseCreatedUpdatedModel):
     name = models.CharField(max_length=36)
     slug_name = models.CharField(max_length=36)
+    precio_base = models.DecimalField(default=0, max_digits=10, decimal_places=2)
     
     def save(self, *args, **kwargs):
         self.slug_name = slugify(self.name, separator="_")
@@ -33,6 +37,11 @@ class Material(BaseCreatedUpdatedModel):
 
 class Expediente(BaseCreatedUpdatedModel):
     identificador = models.CharField(max_length=36)
+    trabajador = models.ForeignKey(
+                User,
+                on_delete=models.DO_NOTHING,
+                null=True,
+                blank=True)
     cliente = models.ForeignKey('users.Cliente',
         on_delete=models.DO_NOTHING,
         null=True,

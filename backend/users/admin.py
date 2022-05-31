@@ -4,13 +4,18 @@ from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 
 from backend.users.forms import UserAdminChangeForm, UserAdminCreationForm
-from backend.users.models import Prestamos
+from backend.users.models import Prestamos, Cliente
 
 User = get_user_model()
 
 
 @admin.register(Prestamos)
 class PrestamosAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(Cliente)
+class ClienteAdmin(admin.ModelAdmin):
     pass
 
 

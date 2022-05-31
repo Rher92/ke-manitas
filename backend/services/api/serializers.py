@@ -59,7 +59,7 @@ class ExpedienteListSerializer(serializers.ModelSerializer):
     gestion = serializers.SerializerMethodField()
     material = serializers.SerializerMethodField()
     articulos = serializers.SerializerMethodField()
-    created = serializers.SerializerMethodField()
+    date = serializers.SerializerMethodField()
 
     class Meta:
         model = Expediente
@@ -72,7 +72,7 @@ class ExpedienteListSerializer(serializers.ModelSerializer):
             'material',
             'articulos',
             'precio',
-            'created'
+            'date'
         ]
 
     def get_trabajador(self, obj):
@@ -85,7 +85,7 @@ class ExpedienteListSerializer(serializers.ModelSerializer):
         _return = None
         if hasattr(obj, 'cliente'):
             if obj.cliente:
-                _return = obj.cliente.username
+                _return = obj.cliente.user.username
         return _return
 
     def get_gestion(self, obj):
@@ -107,7 +107,7 @@ class ExpedienteListSerializer(serializers.ModelSerializer):
             _return = obj.articulos.all().values('id', 'name', 'precio_base')
         return _return
 
-    def get_created(self,obj):
+    def get_date(self,obj):
         _return = None
         if hasattr(obj, 'created'):
             _return = f"{obj.created.day}/{obj.created.month}/{obj.created.year}"

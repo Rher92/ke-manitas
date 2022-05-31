@@ -20,6 +20,9 @@
               <router-link class="nav-link" to="/list-expenses-users">Mis gastos</router-link>
             </li>
             <li class="nav-item">
+              <router-link class="nav-link" to="/list-expedientes">Expedientes</router-link>
+            </li>
+            <li class="nav-item">
               <b-nav-item-dropdown text="Vehiculo" right type="dark">
                 <!-- <b-dropdown-item href="#">Perfil</b-dropdown-item> -->
                 <div v-if="VehicleLogin == null">

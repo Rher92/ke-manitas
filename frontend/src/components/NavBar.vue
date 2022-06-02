@@ -20,8 +20,15 @@
               <router-link class="nav-link" to="/list-expenses-users">Mis gastos</router-link>
             </li>
             <li class="nav-item">
-              <router-link class="nav-link" to="/list-expedientes">Expedientes</router-link>
-            </li>
+              <b-nav-item-dropdown text="Expedientes" right type="dark">
+                <div>
+                   <b-dropdown-item href="/list-expedientes">Ver expediente</b-dropdown-item>
+                </div>
+                <div>
+                   <b-dropdown-item href="/expedientes">Crear expediente</b-dropdown-item>
+                </div>
+              </b-nav-item-dropdown>
+            </li> 
             <li class="nav-item">
               <b-nav-item-dropdown text="Vehiculo" right type="dark">
                 <!-- <b-dropdown-item href="#">Perfil</b-dropdown-item> -->

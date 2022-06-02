@@ -3,31 +3,29 @@
     <!-- <b-form @submit.prevent="onSubmit" @reset="onReset" v-if="show"> -->
     <b-form @submit.prevent="onSubmit"  v-if="show">
 
-      <b-form-group id="input-group-2" label="Kilometraje:" label-for="input-2">
+      <b-form-group id="input-group-2" label="Expediente:" label-for="input-2">
         <b-form-input
-          type="number"
           id="input-2"
-          v-model="form.km"
+          v-model="form.expediente"
           placeholder="ingrese ID/Expendiente"
           required
-          v-bind:class="{'form-control':true, 'is-invalid' : !validInputTexts(form.km) && fieldsBlured}"
+          v-bind:class="{'form-control':true, 'is-invalid' : !validInputTexts(form.expediente) && fieldsBlured}"
           v-on:blur="fieldsBlured = true"
-          :disabled="this.vehicle_has_been_selected"
         ></b-form-input>
-        <div class="invalid-feedback">KM es requerido o No coincide con el KM del sistema</div>
+        <div class="invalid-feedback">El Expediente es requerido</div>
       </b-form-group>
 
-      <b-form-group id="input-group-3" label="Vehiculos:" label-for="input-3">
+      <b-form-group id="input-group-3" label="Tipo de conexión:" label-for="input-3">
         <b-form-select
           class="form-select"
           id="input-3"
-          v-model="form.vehicle"
-          :options="vehicles.items"
+          v-model="form.tipo_conexion"
+          :options="tipo_conexion.items"
           required
-          v-bind:class="{'form-control':true, 'is-invalid' : !validInputTexts(form.vehicle) && fieldsBlured}"
+          v-bind:class="{'form-control':true, 'is-invalid' : !validInputTexts(form.tipo_conexion) && fieldsBlured}"
           v-on:blur="fieldsBlured = true"
         ></b-form-select>
-        <div class="invalid-feedback">Seleccione un auto</div>
+        <div class="invalid-feedback">Seleccione un tipo de conexión</div>
       </b-form-group>
 
       <b-form-group id="input-group-3" label="Foto Servicio:" label-for="input-3">
@@ -57,7 +55,7 @@ import { mapGetters, mapActions } from 'vuex';
 
   export default {
     endpoint: process.env.BASE_URL,
-    name: 'LoginVehicle',
+    name: 'createExpedientes',
     data() {
       return {
         fieldsBlured : false,
@@ -66,17 +64,19 @@ import { mapGetters, mapActions } from 'vuex';
         valid : false,
         submitted : false,
         form: {
-          km: '',
-          vehicle: ''
+          expediente: '',
+          tipo_conexion: '',
         },
-        vehicles: {
+        materiales: {
+          items: [],
+        },
+        tipo_conexion: {
+          items: [],
+        },
+        articulos: {
           items: [],
         },
         show: true,
-        states: {
-          km: false,
-          vehicle: false
-        },
         files: null,
       }
     },
@@ -86,17 +86,17 @@ import { mapGetters, mapActions } from 'vuex';
         this.files = this.$refs.file.files[0];
       },
       validate : function(){
-        var vehicle_selected = null
-        let _return = false;
-        this.vehicles.items.forEach(element => {
-          if(element.value == this.form.vehicle){
-            vehicle_selected = element
-          }
-        })
-        if ((vehicle_selected.km_tolerance_up) > parseInt(this.form.km)  &&  parseInt(this.form.km) > (vehicle_selected.km_tolerance_down)){
-            _return = true;
-        }
-        return _return
+        // var vehicle_selected = null
+        // let _return = false;
+        // this.vehicles.items.forEach(element => {
+        //   if(element.value == this.form.vehicle){
+        //     vehicle_selected = element
+        //   }
+        // })
+        // if ((vehicle_selected.km_tolerance_up) > parseInt(this.form.km)  &&  parseInt(this.form.km) > (vehicle_selected.km_tolerance_down)){
+        //     _return = true;
+        // }
+        // return _return
       },
 
       validInputTexts : function(field) {
@@ -108,33 +108,33 @@ import { mapGetters, mapActions } from 'vuex';
           return _return;
           }
       },
-      validInputKm : function(field) {
-        var vehicle_selected = null
-        this.vehicles.items.forEach(element => {
-          if(element.value == this.form.vehicle){
-            vehicle_selected = element
-          }
-        })
-        let _return = false;
-        if ((vehicle_selected.km_tolerance_up) > parseInt(field)  &&  parseInt(field)> (vehicle_selected.km_tolerance_down)){
-            _return = true;
-        }
-        return _return
-      },
+      // validInputKm : function(field) {
+      //   var vehicle_selected = null
+      //   this.vehicles.items.forEach(element => {
+      //     if(element.value == this.form.vehicle){
+      //       vehicle_selected = element
+      //     }
+      //   })
+      //   let _return = false;
+      //   if ((vehicle_selected.km_tolerance_up) > parseInt(field)  &&  parseInt(field)> (vehicle_selected.km_tolerance_down)){
+      //       _return = true;
+      //   }
+      //   return _return
+      // },
       onSubmit() {
         this.valid = this.validate();
         if(this.valid){
           event.preventDefault()
-          this.logInVehicles()
+          this.saveFile()
         }
       },
 
-      async logInVehicles(){
+      async saveFile(){
         const FormData = require('form-data');
         const form = new FormData();
 
         form.append('km', this.form.km);
-        form.append('vehicle',  this.form.vehicle);
+        form.append('vehicle',  this.form);
         form.append('file', this.files);
 
         axios.post('api/vehicles-workday/', form, {
@@ -153,32 +153,40 @@ import { mapGetters, mapActions } from 'vuex';
           });
       },
 
-      getVehicles: function(){
+      getInfoToFields: function(){
           axios({
             method: 'get',
-            url: '/api/vehicles',
+            url: '/api/data-for-services',
             timeout: 4000,    // 4 seconds timeout
+            headers: {
+                  "Authorization": `Token ${this.user.access_token}`
+              }
           })
           .then(response => {
-            let vehicles = response.data.results
-            vehicles.forEach(element => {
+            let info = response.data              
+            
+            info.materiales.forEach(element => {
               var dict = {
-                text: element.slug_name,
+                text: element.name,
                 value: element.id,
-                disabled: false,
-                km: element.km,
-                tolerancia: element.tolerancia_km,
-                km_tolerance_up: element.km_tolerance_up,
-                km_tolerance_down: element.km_tolerance_down
               }
-              if (element.is_being_used_by != null){
-                dict['text'] = element.slug_name + ' - usado por: ' + element.is_being_used_by
-                dict['disabled'] = true
-              } else if (!element.available) {
-                dict['text'] = element.slug_name + ' - no disponible'
-                dict['disabled'] = true
+              this.materiales.items.push(dict)
+            })
+            
+            info.articulos.forEach(element => {
+              var dict = {
+                text: element.name,
+                value: element.id,
               }
-              this.vehicles.items.push(dict)
+              this.articulos.items.push(dict)
+            })
+            
+            info.tipo_conexion.forEach(element => {
+              var dict = {
+                text: element.name,
+                value: element.id,
+              }
+              this.tipo_conexion.items.push(dict)
             })
           })
           .catch(error => console.error('timeout exceeded', console.log(error)))
@@ -186,19 +194,12 @@ import { mapGetters, mapActions } from 'vuex';
 
     },
     mounted() {
-      this.getVehicles()
+      this.getInfoToFields()
     },
 
   computed: {
     ...mapGetters({user: 'stateUser'}),
-    vehicle_has_been_selected(){
-      var _return = false
-      if (this.form.vehicle == ''){
-        _return = true
-      }
-      return _return
-    }
-  },
+    },
   }
 
 </script>

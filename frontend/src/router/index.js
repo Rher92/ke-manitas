@@ -18,6 +18,7 @@ import ListExpedientes from '@/views/ListExpedientes';
 import RetrieveLentUser from '@/views/RetrieveLentUser';
 import RetrieveExpenseUser from '@/views/RetrieveExpenseUser';
 import RetrieveExpedientes from '@/views/RetrieveExpedientes';
+import CreateExpedientes from '@/views/CreateExpedientes';
 
 Vue.use(VueRouter);
 
@@ -101,6 +102,12 @@ const routes = [
     path: '/profile',
     name: 'Profile',
     component: Profile,
+    meta: {requiresAuth: true},
+  },
+  {
+    path: '/expedientes',
+    name: 'CreateExpedientes',
+    component: CreateExpedientes,
     meta: {requiresAuth: true},
   },
 ]

@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.utils.safestring import mark_safe
+
 
 # Register your models here.
 from .models import Articulos, TiposGestion, Material, Expediente
@@ -21,4 +23,21 @@ class MaterialAdmin(admin.ModelAdmin):
 
 @admin.register(Expediente)
 class ExpedienteAdmin(admin.ModelAdmin):
-    pass
+    readonly_fields = ['archivo']
+
+    def archivo(self, obj):
+        for i in obj.expedientesimagenes_set.all():
+            image = i.file
+            url = image.url
+            return mark_safe(f"""
+            <img src="{url}" width="150" height="150"/>
+            <br>
+            <br>
+            <br>
+            <div class="text-center">
+            <ul class="object-tools">
+                <li>
+                <a href="{url}" class="historylink" target="_blank">Ver completo</a>
+                </li>
+            </ul>
+            </div>""")

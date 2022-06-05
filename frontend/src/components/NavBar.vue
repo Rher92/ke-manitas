@@ -22,7 +22,7 @@
             <li class="nav-item">
               <b-nav-item-dropdown text="Expedientes" right type="dark">
                 <div>
-                   <b-dropdown-item href="/list-expedientes">Ver expediente</b-dropdown-item>
+                   <b-dropdown-item href="/list-expedientes">Ver expedientes</b-dropdown-item>
                 </div>
                 <div>
                    <b-dropdown-item href="/expedientes">Crear expediente</b-dropdown-item>

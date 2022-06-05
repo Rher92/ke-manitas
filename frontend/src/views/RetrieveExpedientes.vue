@@ -9,7 +9,7 @@
           <div>Cliente: {{ item.cliente }}</div>
           <div>Gestion: {{ item.gestion }}</div>
           <div>Material: {{ item.material }}</div>
-          <div>Articulos: {{ item.articulos }}</div>
+          <div>Articulos: {{ articulos }}</div>
           <div>Precio: {{ item.precio }}</div>
         </div>
     </div>
@@ -35,7 +35,16 @@ export default {
     ...mapGetters({user: 'stateUser' }),
     title() {
       return (this.expedientes.items[0])
-    }
+    },
+    articulos(){
+      var arts = []
+      this.expedientes.items.forEach(element => {
+        element.articulos.forEach(xelement => {
+          arts.push(xelement.name)
+        })
+      })
+      return arts.toString()
+    },
   },
   methods: {
       getExpedientes: function(id){

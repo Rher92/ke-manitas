@@ -17,7 +17,7 @@ router.register("vehicles-workday", VehicleWorkDayViewSet)
 router.register("lents", LentsViewSet)
 router.register("expenses", ExpensesVehicleWorkdayViewSet)
 router.register(r"data-for-services", ReadFieldsViewset, basename='services.models.Expediente')
-router.register(r"expedientes", ExpedienteViewset, basename='services.models.Expediente')
+router.register(r"expedientes", ExpedienteViewset)
 
 
 app_name = "api"

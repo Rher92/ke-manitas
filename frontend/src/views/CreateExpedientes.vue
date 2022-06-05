@@ -28,6 +28,48 @@
         <div class="invalid-feedback">Seleccione un tipo de conexión</div>
       </b-form-group>
 
+      <b-form-group id="input-group-2" label="Precio:" label-for="input-2">
+        <b-form-input
+          type="number"
+          id="input-2"
+          v-model="form.precio"
+          placeholder="ingrese precio del expediente"
+          required
+          v-bind:class="{'form-control':true, 'is-invalid' : !validInputTexts(form.precio) && fieldsBlured}"
+          v-on:blur="fieldsBlured = true"
+          :disabled="this.is_conexion"
+        ></b-form-input>
+        <div class="invalid-feedback">El Precio es requerido</div>
+      </b-form-group>
+
+      <b-form-group id="input-group-3" label="Materiales:" label-for="input-3">
+        <b-form-select
+          class="form-select"
+          id="input-3"
+          v-model="form.materiales"
+          :options="materiales.items"
+          required
+          v-bind:class="{'form-control':true, 'is-invalid' : !validInputTexts(form.materiales) && fieldsBlured}"
+          v-on:blur="fieldsBlured = true"
+          :disabled="this.is_realizado_or_conexion"
+        ></b-form-select>
+        <div class="invalid-feedback">Seleccione si el material está cubierto o no</div>
+      </b-form-group>
+
+      <b-form-group id="input-group-3" label="Articulos:" label-for="input-3">
+        <b-form-select
+          class="form-select"
+          id="input-3"
+          v-model="form.articulos"
+          :options="articulos.items"
+          required
+          v-bind:class="{'form-control':true, 'is-invalid' : !validInputTexts(form.articulos) && fieldsBlured}"
+          v-on:blur="fieldsBlured = true"
+          :disabled="this.is_realizado_or_conexion"
+        ></b-form-select>
+        <div class="invalid-feedback">Seleccione si el articulos</div>
+      </b-form-group>
+
       <b-form-group id="input-group-3" label="Foto Servicio:" label-for="input-3">
         <div class="container">
           <div class="large-12 medium-12 small-12 cell">
@@ -63,9 +105,14 @@ import { mapGetters, mapActions } from 'vuex';
         disabledForm: true,
         valid : false,
         submitted : false,
+        // is_conexion_realizado: true,
         form: {
           expediente: '',
           tipo_conexion: '',
+          precio: '',
+          materiales: '',
+          articulos: '',
+          precio_articulo: ''
         },
         materiales: {
           items: [],
@@ -122,7 +169,7 @@ import { mapGetters, mapActions } from 'vuex';
       //   return _return
       // },
       onSubmit() {
-        this.valid = this.validate();
+        this.valid = true //this.validate();
         if(this.valid){
           event.preventDefault()
           this.saveFile()
@@ -133,11 +180,15 @@ import { mapGetters, mapActions } from 'vuex';
         const FormData = require('form-data');
         const form = new FormData();
 
-        form.append('km', this.form.km);
-        form.append('vehicle',  this.form);
+        form.append('identificador', this.form.expediente);
+        form.append('gestion', this.form.tipo_conexion);
+        form.append('material', this.form.materiales);
+        form.append('precio', this.form.precio);
+        form.append('articulos', this.form.articulos);
         form.append('file', this.files);
 
-        axios.post('api/vehicles-workday/', form, {
+        console.log('kakakakakkaka')
+        axios.post('api/expedientes/', form, {
               headers: {
                   "Content-Type": "multipart/form-data",
                   "Authorization": `Token ${this.user.access_token}`
@@ -145,8 +196,8 @@ import { mapGetters, mapActions } from 'vuex';
               }
             })
           .then(response => {
-            this.VehicleWorkdayToUser(response.data)
-            this.$router.push('/profile').catch((e) => console.log(e));
+            console.log(response)
+            this.$router.go(this.$router.currentRoute).catch((e) => console.log(e));
           })
           .catch(function (error) {
             console.log(error);
@@ -199,7 +250,22 @@ import { mapGetters, mapActions } from 'vuex';
 
   computed: {
     ...mapGetters({user: 'stateUser'}),
+    is_conexion(){
+      var _return = true
+      if (this.form.tipo_conexion == 1){
+        _return = false
+      }
+      return _return
     },
-  }
+    is_realizado_or_conexion(){
+      var _return = true
+      if (this.form.tipo_conexion == 1 ||  this.form.tipo_conexion == 2){
+        console.log("gagagag")
+        _return = false
+      }
+      return _return
+    },
+  },
+}
 
 </script>

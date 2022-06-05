@@ -43,7 +43,7 @@ class ExpedienteViewset(mixins.ListModelMixin,
                         viewsets.GenericViewSet):
     parser_classes = (MultiPartParser,)
     permission_classes = [AllowAny]
-    queryset = Expediente.objects.all()
+    queryset = Expediente.objects.all().order_by('-created')
     lookup_field = "pk"
     pagination_class = CustomPagination
     filter_backends = (SearchFilter, OrderingFilter, DjangoFilterBackend)

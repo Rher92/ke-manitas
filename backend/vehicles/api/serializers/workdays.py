@@ -138,5 +138,8 @@ class ExpensesVehicleWorkdaySerializer(serializers.ModelSerializer):
     def get_fecha_del_pago(self,obj):
         _return = None
         if hasattr(obj, 'fecha_del_pago'):
-            _return = f"{obj.fecha_del_pago.day}/{obj.fecha_del_pago.month}/{obj.fecha_del_pago.year}"
+            try:
+                _return = f"{obj.fecha_del_pago.day}/{obj.fecha_del_pago.month}/{obj.fecha_del_pago.year}"
+            except:
+                _return = None
         return _return

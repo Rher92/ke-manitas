@@ -43,6 +43,8 @@ class Cliente(BaseCreatedUpdatedModel):
     telefono = models.IntegerField(blank=True, null=True, max_length=30)
     email = models.EmailField(blank=True, null=True, max_length=100)
 
+    def __str__(self) -> str:
+        return f'{self.user.name}'
 
 class Prestamos(BaseCreatedUpdatedModel):
     user = models.ForeignKey(
@@ -53,4 +55,6 @@ class Prestamos(BaseCreatedUpdatedModel):
     moneda = models.CharField(blank=True, null=True, max_length=20)
     pagado = models.BooleanField(blank=True, null=True, default=False)
     fecha_del_pago = models.DateTimeField(blank=True, null=True)
-    
+
+    def __str__(self) -> str:
+        return f'{self.user.name} - {self.cantidad} - {self.moneda}'

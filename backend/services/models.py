@@ -16,6 +16,9 @@ class Articulos(BaseCreatedUpdatedModel):
         self.slug_name = slugify(self.name, separator="_")
         return super().save(*args, **kwargs)
 
+    def __str__(self) -> str:
+        return f'{self.name}'
+
 
 class TiposGestion(BaseCreatedUpdatedModel):
     name = models.CharField(max_length=36)
@@ -25,6 +28,9 @@ class TiposGestion(BaseCreatedUpdatedModel):
         self.slug_name = slugify(self.name, separator="_")
         return super().save(*args, **kwargs)
 
+    def __str__(self) -> str:
+        return f'{self.name}'
+
 
 class Material(BaseCreatedUpdatedModel):
     name = models.CharField(max_length=36)
@@ -33,6 +39,9 @@ class Material(BaseCreatedUpdatedModel):
     def save(self, *args, **kwargs):
         self.slug_name = slugify(self.name, separator="_")
         return super().save(*args, **kwargs)
+
+    def __str__(self) -> str:
+        return f'{self.name}'
 
 
 class Expediente(BaseCreatedUpdatedModel):
@@ -59,6 +68,8 @@ class Expediente(BaseCreatedUpdatedModel):
         blank=True)
     precio = models.IntegerField(null=True, blank=True)
 
+    def __str__(self) -> str:
+        return f'{self.pk} - {self.identificador} - {self.created}'
 
 class ExpedientesImagenes(BaseCreatedUpdatedModel):
     expediente = models.ForeignKey('Expediente',

@@ -4,7 +4,7 @@ from .base import env
 # GENERAL
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#debug
-DEBUG = False
+DEBUG = True
 # https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 SECRET_KEY = env(
     "DJANGO_SECRET_KEY",
@@ -57,7 +57,7 @@ EMAIL_BACKEND = env(
 # Your stuff...
 # ------------------------------------------------------------------------------
 # CORS_ALLOW_ALL_ORIGINS = True # If this is used then `CORS_ALLOWED_ORIGINS` will not have any effect
-# CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_ALLOW_ALL = True
 # CORS_ALLOW_CREDENTIALS = False
 
 # https://www.stackhawk.com/blog/django-cors-guide/
@@ -68,7 +68,7 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:80',
     'http://127.0.0.1:8080',
     'http://127.0.0.1:80',
-    'http://http://164.92.144.209:8080',
+    'http://164.92.144.209:8080',
 ]
 
 # LOGGING

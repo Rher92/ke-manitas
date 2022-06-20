@@ -10,7 +10,9 @@ services:
       context: .
       dockerfile: ./compose/production/django/Dockerfile
     image: backend_local_django
-    container_name: backend_local_django
+    container_name: backend_prod_nginx_django
+    volumes:
+      - .:/app
     depends_on:
       - postgres
     env_file:
@@ -22,7 +24,7 @@ services:
     build:
       context: .
       dockerfile: ./compose/production/postgres/Dockerfile
-    image: backend_production_postgres
+    image: backend_production_nginx_postgres
     volumes:
       - production_postgres_data:/var/lib/postgresql/data:Z
       - production_postgres_data_backups:/backups:z
@@ -33,7 +35,7 @@ services:
     build:
       context: .
       dockerfile: ./compose/production/nginx/Dockerfile
-    image: nginx_privated_file
+    image: nginx_production
     restart: on-failure:10
     depends_on:
       - django
@@ -43,58 +45,3 @@ services:
     ports:
       - "0.0.0.0:80:80"
       - "0.0.0.0:443:443"
-
-
-  redis:
-    image: redis:5-alpine
-    restart: on-failure:5 
-
-  celeryworker:
-    build:
-      context: .
-      dockerfile: ./compose/local/django/Dockerfile
-    image: celery_worker
-    restart: on-failure:5 
-    command: /start-celeryworker
-    volumes:
-      - .:/app
-    env_file:
-      - ./.envs/.local/.django
-      - ./.envs/.local/.postgres
-    depends_on:
-      - redis
-      - postgres
-
-  celerybeat:
-    build:
-      context: .
-      dockerfile: ./compose/local/django/Dockerfile
-    image: celery_beat
-    restart: on-failure:5 
-    command: /start-celerybeat
-    volumes:
-      - .:/app
-    env_file:
-      - ./.envs/.local/.django
-      - ./.envs/.local/.postgres
-    depends_on:
-      - redis
-      - postgres
-
-  flower:
-    build:
-      context: .
-      dockerfile: ./compose/local/django/Dockerfile
-    image: celey_flower
-    restart: on-failure:5 
-    command: /start-flower
-    volumes:
-      - .:/app
-    env_file:
-      - ./.envs/.local/.django
-      - ./.envs/.local/.postgres
-    ports:
-      - 5555:5555
-    depends_on:
-      - redis
-      - postgres

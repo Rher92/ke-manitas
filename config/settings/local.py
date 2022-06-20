@@ -66,7 +66,8 @@ CORS_ALLOW_CREDENTIALS=True
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:8080',
     'http://127.0.0.1:8080',
-    'http://137.184.79.234:8080',
+    'http://192.168.1.142:8080',
+    'http://192.168.1.42:8080'
 ]
 
 # CORS_ALLOW_METHODS = [

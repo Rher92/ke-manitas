@@ -36,8 +36,9 @@ class VehicleSerializer(VehicleLoginSerializer):
 
     def get_is_being_used_by(self, obj):
         _return = None
-        if not obj.vehicleworkday_set.last().close:
-            _return = obj.vehicleworkday_set.last().worker.name
+        if instance := obj.vehicleworkday_set.last():
+            if not instance.close:
+                _return = obj.vehicleworkday_set.last().worker.name
         return _return
 
     def get_km_tolerance_up(self, obj):

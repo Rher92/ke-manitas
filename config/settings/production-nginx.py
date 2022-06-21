@@ -11,7 +11,7 @@ SECRET_KEY = env(
     default="rQYVY0BpX4gBrrO7ZOqNql7AoW4nNCq7fJVe4LI75syfz0mOIA6BGVQeejm3jKLB",
 )
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1", '*']
+ALLOWED_HOSTS = ["*","164.92.144.209", "localhost", "0.0.0.0", "127.0.0.1"]
 
 
 # MIDDLEWARE
@@ -68,7 +68,7 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:80',
     'http://127.0.0.1:8080',
     'http://127.0.0.1:80',
-    'http://164.92.144.209:8080',
+    'http://164.92.144.209:80',
 ]
 
 # LOGGING
